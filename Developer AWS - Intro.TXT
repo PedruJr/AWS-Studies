@@ -591,4 +591,35 @@
         -> São customizações de um instancia EC2.
         -> Podemos adicionar sua propria configuração de software, sistema operacional, monitoramento
         -> Tem boot mais rapido / configuração da instancia pq seu sistema ja esta pre-empacotado.
-        -> Apos construidos ficam em uma região especifica, porem pode ser copiado por regioes
+        -> Apos construidos ficam em uma região especifica, porem pode ser copiado para outras regioes.
+        -> Existem PUBLICS IAM, providos pela AWS.
+        -> Você pode fazer seu proprio AMI.
+        -> Existe um marketplace somente de AMI, podemos comprar e vender Amazon Machine Images
+        -> PROCESSO DE AMI a partir de uma instancia EC2
+            -> Inicie normalmente uma instancia e configure.
+            -> Pare a instancia (para segurança dos dados).
+            -> Crie um AMI - Isso tambem cria alguns snapshots.
+
+    AMI HANDS ON
+        -> ON EC2 MENU -> INSTANCES -> LAUNCH INSTANCE -> Na parte de User data Info
+            -> Escreva isso nesta parte de config da instancia:
+                #!/bin/bash
+                # Use this for your user data (script from top to bottom)
+                # install httpd (Linux 2 version)
+                yum update -y
+                yum install -y httpd
+                systemctl start httpd
+                systemctl enable httpd
+        -> Primeiras linhas instalamos o HTTPD -> Apache web server
+        -> Entao caso voce conecte no IP da instancia abrira a pagina do apache no navegador.
+        -> ENTAO CRIAMOS UM IMA -> BOTÃO DIREITO NA INSTANCIA ENTAO -> OPÇÃO IMAGE AND TEMPLATES.
+        -> Image name -> Deixar as configs como estao mesmo entao criar a img no botao ao final
+        da tela.
+        -> ENTAO NO MENU ESQUERDO NA ABA DE IMAGES -> temos a opçao AMIS ->
+        -> Aparecera uma lista como a de instancias, porem voce deve aguardar um pouco até a imagem
+        ser criada por completo.
+        -> Podemos lançar instancias pelas imagems na criaçao de instancias e tambem criar direto por
+        uma imagem na lista de AMI.
+
+    EC2 Instance Store
+        ->
