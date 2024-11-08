@@ -1,0 +1,594 @@
+    Este curso é o Associete AWS - Developer.
+
+    O AWS possui servidores world wide que voce pode configurar o local que
+    deseja o ser fonte do atendimento de seus usos, como servidores, etc.
+        -> Deve ser levado em conta a legislação sobre aplicativos.
+        -> Proximidade reduz a latencia.
+        -> Alguns serviços so estao disponiveis em determinadas areas.
+        -> Alguns servers tem opçao de servers disponiveis, podendo ter 3 ou 6
+        pontos de presença ao redor da região escolhida.
+
+    Serviços AWS Globais:
+        -> Identity and Access Management (IAM)
+        -> Route 53 (DNS Service)
+        -> CloudFront (Content Delivery Network)
+        -> WAF (Web Application Firewall)
+    Alguns serviços exclusivos de regiões:
+        -> Amazon EC2 (Infrastructure as a Service)
+        -> Elastic Beanstalk (Platform as a Service)
+        -> Lambda (Function as a Service)
+        -> Rekognition (Software as a Service).
+
+    Pode se escolher a região no extremo canto superior direito <-
+
+    Todos os serviços no canto superior esquerdo, ai ainda tem o filtro de
+    All Services. <-
+
+    9. Vamos utilizar a barra de pesquisa para procurar route 53, que ao sele
+    cionarmos muda a região para global, dizendo que seu acesso é global (glo.
+    bal services.
+        -> Podemos vericiar os serviços disponiveis atravez do site, na sessão
+         AWS Regional Services.
+
+
+    IAM: User & Groups:
+        -> Identity and Access Management a Global service.
+        -> Root account created by default, shouldnt be used or shared
+        -> Podemos criar usuarios na nossa organização e agrupalos.
+        -> Grupos podem ter somente usuarios, não outros grupos.
+        -> Usuario pode participar de multiplos grupos.
+        -> Podemos acessar o IAM: Permissions, que mostra um json onde podemos
+        realizar as permissões do usuario na AWS.
+
+    USO
+        -> Escrevendo IAM no search, indo na aba de Users.
+        -> No usuario ou no grupo podemos acessar o mesmo e alterar suas permi
+        ssoes.
+        -> No Dashboard conseguimos mudar nosso ALIAS de login, um apelido que
+        setamos na url para logar.
+
+    Account Alias:
+    aws-pedros
+
+    Sign-in URL for IAM users in this account
+    https://aws-pedros.signin.aws.amazon.com/console
+
+    IAM POLICIES <-
+        -> Os usuarios aderem a politica implementada no grupo.
+        -> Estrutura de configuração feita em JSON.
+
+    HANDS ON <-
+        -> Conseguimos remover as permissoes de usuario pelo root.
+        -> Podemos criar uma linha de permissoes, podemos adicionar permis
+        soes por usuario atravez de grupo.
+        -> Existe permissionamento de readme only.
+        -> Estas linhas sao chamadas de Policy e podem ser gerenciadas atra
+        vez de um json.
+        -> * nas definições json quer dizer TUDO
+
+    IAM MFA OVERVIEW <-
+        -> Forma de proteger os permissionamentos feitos.
+        -> Existe PASSWORD POLICY, pode definir o minimo de caracteres, ou
+        ate caracteres especificos.
+        -> Configuração para usuarios AWS IAM definam ou nao sua senha
+        -> Configurar expiração de senha.
+        -> Possui MFA Multiple Factor Access, Com google Authenticator ou
+        Authy que é proprio da amazon.
+        -> Possui U2F, que é o two factor fisico, tipo yubikey by yubico
+        -> Para editar o PASSWORD POLICY é so ir no search e pesquisar isso,
+        tem modo default e modo custom, com todas estas opçoes.
+        -> Two factor acess para a conta root é necessario ir no SECURITY
+        CREDENTIALS.
+
+    17. AWS ACESS KEYS, CLI and SDK <-
+        -> How access AWS? 3 ways:
+        -> AWS Management Console (password + mfa)
+        -> AWS Command Line Interface (CLI) (Access key)
+        -> AWS Software Developer Kit (SDK) (Access key) Varias linguagens,
+        IOS de smartphones e SDK DE IOT.
+        -> Estas access keys são geradas pelo AWS Management Console, cada user
+        gerencia suas access keys.
+        -> Para gerenciar pesquisar por ACCESS KEYS no search bar, podemos criar
+        novas, editar, excluir, etc.
+        -> AWS CLI foi construida com SDK AWS PYTHON
+
+    AWS CLI ON WINDOWS <-
+        -> SEARCH ON GOOGLE AWS WINDOWS CLI DOWNLOAD
+        -> Install via MSI Installer, Então executar o EXE.
+        -> Apos a instalação testar no terminal, AWS --VERSION
+
+    AWS CLI ON LINUX <-
+        -> SEARCH ON GOOGLE AWS LINUX CLI DOWNLOAD
+        -> Então rodamos 3 comandos listados no tutorial no site da aws.
+
+    AWS CLI ON HANDS <-
+        -> No perfil do usuario, escrollando conseguimos criar access keys,
+        atravez do usuario.
+        -> Precisamos entao liberar uma access key para o usuario poder uti
+        lizar o cli corretamente.
+        --->> NO TERMINAL <<---
+        -> aws configure -> entao digitar o access key do usuario, depois o
+        secret key, então a região, entao enter no default output.
+        -> aws iam list-users: list all users on account
+
+    AWS CLOUND SHELL <-
+        -> Basicamente um terminal na nuvem AWS.
+        -> Disponivel somente em algumas regioes, podendo ser checado atravez,
+        do faq da propria AWS.
+        -> Uso automatico das suas credenciais logadas devido ao fato de se usar,
+        pelo navegador.
+        -> AWS CLI embutido com certeza.
+        -> O CLOUND SHELL TEM INTERFACE para baixar e enviar arquivos.
+        -> Dividir em dois terminais atravez da interface tbm.
+        -> Basicamente um cmd em um server.
+
+    IAM ROLES FOR SERVICES <-
+        - Ultimo componente IAM - IAM ROLES
+        - Roles funcionam como perfils porem em vez de ser para o user seria
+        para as aplicações AWS.
+        - Como exemplo temos uma função chamado EC2 Instance, que cria um server
+        virtual.
+        - IAM ROLES COMUNS: EC2 Instance Roles, Lambda Function Roles, Roles for
+        CloudFormation.
+        - Para acessar AWS > IAM >  Roles
+        - Ai selecionamos o tipo de entidade autorizada, neste caso usaremos AWS service
+        - Entao escolhemos qual serviço esta role de tipo tal sera utilizada.
+        - Ai podemos adicionar as permissoes.
+        - Podemos adicionar uma permissao chamada IAMREADONLYACCESS para permitir que as
+        as aplicações vejam as instancias do IAM.
+        - Inserimos um nome para role associando com o typo e qual serviço
+        - Create role no final e xazam
+
+    IAM Security Tools
+        - IAM Credentials report, que lista todas as permissoes do usuario e
+        suas credenciais.
+        - IAM acess advisor, lista as permissoes dos usuarios nas funcionali
+        dades e quando foi seu ultimo acesso. (bom para revisao).
+        - Para acessar IAM > Credential Report.
+        - Recebe uma tabela excell com os dados.
+
+    IAM Section - Summary
+        - Users, Groups, Policies, Roles, Security, CLI, SDK, Access keys,
+        Audits.
+
+    Questions
+    AWS ROLE:
+        -> Iam entity that defines a set of permissions, to make
+        requests to aws services, and will be used by a service, not user or
+        group.
+
+    Which of the following is an IAM Security Tool?:
+        -> IAM Credentials report lists all your AWS Account's IAM Users and
+        the status of their various credentials.
+
+    Which answer is INCORRECT regarding IAM Users?:
+        -> IAM Users access AWS services using their own credentials
+        (username & password or Access Keys).
+
+    Which of the following is an IAM best practice?:
+        -> Use the root account only to create your first IAM User and a few
+        account/service management tasks. For everyday tasks, use an IAM User.
+
+    What are IAM Policies?:
+        -> Documentos json que definem as permisoes para fazer reqs para
+        aws services e pode ser utilizado por IAM users, grupos e roles.
+
+    Which principle should you apply regarding IAM Permissions?:
+        -> That's right! Don't give more permissions than the user needs.
+
+    What should you do to increase your root account security?
+        -> When you enable MFA, this adds another layer of security. Even if
+        your password is stolen, lost, or hacked your account is not compromised.
+
+    IAM User Groups can contain IAM Users and other User Groups?
+        -> False, IAM User Groups can contain IAM Users and other User Groups.
+
+    An IAM policy consists of one or more statements. A statement in an IAM
+    Policy consists of the following, EXCEPT?: -> VERSION
+        -> A statement in an IAM Policy consists of Sid, Effect, Principal, Action,
+        Resource, and Condition. Version is part of the IAM Policy itself, not the
+        statement.
+
+    According to the AWS Shared Responsibility Model, which of the following
+    is AWS responsibility?
+        -> AWS INFRAESTRUCTURE.
+
+    30 - AWS Budget setup - Setando Orçamento
+        -> No canto superior direito no seu nome temos a opção billing mngment,
+        but u can only access com o usuario root, os adms nao podem ver.
+        -> A menos que voce habilite no IAM user and role access to Billing
+        informatin.
+        -> conseguimos acompanhar o fluxo de gastos das aplicaçoes em charges by
+        service.
+        -> AWS Free tier show you free access to some aplications.
+        -> Podemos criar um orçamento com "Create budget" podemos escolher um
+        template.
+        -> Especificar parametros de orçamento como quantidade total, nome do
+        orçamento.
+
+    31 - EC2 Elastic Compute Clound = IaaS Infraestructure as a service
+        -> EC2 um dos serviços mais populares do AWS.
+        -> Renting virtual machines EC2.
+        -> Storage data in virtual drives EBS.
+        -> Distributing load across machines ELB.
+        -> Scaling the services using an auto-scaling group ASG.
+        -> EC2 é fundamental para entender a clound aws.
+
+    31 - Configurando EC2 - size and configs options
+        -> Sistema Operacional, OS, Windows, Linux ou Mac.
+        -> How much compute power & cores (CPU)
+        -> How much random-access memory (RAM)
+        -> How Much Storage space:
+            -> Network-Attached EBS & EFS
+        -> Network Card: Speed of the card, ip idress[
+        -> Firewall rules: security group
+        -> Bootstrap script (configurar no primeiro launch): EC2 User Data
+
+    EC2 User Data:
+        -> Script realizado uma vez na primeira iniciaçao.
+        -> bootstrapping significa realizar comando quando alguma maquina da o boot
+        -> É possivel realizar o bootstrap com instancias EC2 User Data Script
+        -> Exemplos: Instalar updates, Instalar Softwares, Baixar arquivos comuns
+        da internet, tudo o que voce pensar.
+        -> Roda com o user root.
+
+    Como usar EC22:
+        -> Iaas -> Um dos serviços mais populares da AWS.
+        -> Elastic Compute Cloud.
+        -> Aluguel de maquinas virtuais (EC2).
+        -> Guardar dados em drives virtuais (EBS).
+        -> Distribuir carga entre as maquinas (ELB) Elastic Load Balancer.
+        -> Escalar serviços utilizando uma auto escala de grupos (ASG) Auto Escaling Group
+        -> Podemos alugar e configurar:
+            -> Sistemas OS como windows, linux e ate MAC.
+            -> Poder de computação e cores.
+            -> RAM e Espaço de Storage (Quantidade online e fisica) (EBS & EFS).
+            -> Placa de internet(network card).
+            -> Regras de firewall.
+            -> Bootstrap script, first launch configurations
+
+    32. Hands-on:
+        Iniciando uma instancia ec2 com linux:
+        -> Console HOME -> EC2 -> INSTANCES -> LAUNCH INSTANCE
+        -> Name -> TAG -> Select Instance (Quickstart) - Many OS options quickstart
+        -> A maioria destes OS vem com padrão para desenvolvimento.
+        -> INSTANCE TYPE -> tipo de micro instanciado, cada um com seus padroes de
+        opçoes como dito nas preferencias ec2 a cima, como ram, rom, cpu, cores.
+        -> Existem alguns que podemos iniciar gratuitamente FREE TIER ELIGIBLE.
+        -> Podemos comparar a diferença entre as instancias.
+        -> KEY PAIR (LOGIN) codigo para logar com ssh -> botão criar key pair ->
+        setamos o nome o tipo como RSA, private key file format como .PEM -> create key
+        format ppk only for win 8 and 7.
+        -> NETWORK SETTINGS -> Cria um grupo de segurança regras do firewall -> Launch-wizard-1
+        Para este teste usaremos ssh trafic para habilitar ssh e tambem allow htp trafic from internet
+        -> CONFIGURE STORAGE -> 8Gib type gp2 ROOT VOLUME -> esta config é free
+        ON ADVANCED OPTIONS FROM STORAGE -> delete on termination -> yes para deletar storage
+        quando finalizar a instancia.
+        -> ADVANCED DETAILS -> skip everything -> USER DATA config que podemos config
+        o script inicial de inicializaçao, acho que é o bootstrap.
+        comandos para esta parte:
+        #!/bin/bash
+        # Use this for your user data (script from top to bottom)
+        # install httpd (Linux 2 version)
+        yum update -y
+        yum install -y httpd
+        systemctl start httpd
+        systemctl enable httpd
+        echo "<h1>Hello World from $(hostname -f)</h1>" > /var/www/html/index.html
+        -> esta parte atualizara o OS e entao instalara o httpd, que e o server acredito.
+        e tambem escrevera um html para nosso server.
+        -> SUMMARY -> Selecionamos quantas instancias
+        -> START INSTANCE
+        -> Entao na aba INSTANCE conseguimos usar stop instance, ou no INSTANCE STATE
+        finalizar a instancia.
+        -> Ao  Iniciar novamente a instancia o ip publico muda.
+
+        33. INSTANCE TYPES OF EC2
+            -> 7 tipos de instancia e cada uma com seu proposito.
+            -> GENERAL PURPOSE, COMPUTE OPTIMIZED, MEMORY OPTIMIZED, ACCELERATED COMPUTING,
+            STORAGE OPTIMIZED, HPC OPTIMIZED, INSTANCE FEATURES, MEASURING INSTANCE PERFORMANCE.
+        -> AWS  possui uma convenção de nomeclatura para EC2.
+            -> Exemplo: m5.2xlarge.
+            -> M: instance class, general purpose instance.
+            -> 5: generation (AWS IMPROVES OVER TIME).
+            -> 2xlarge: Maior memoria, cpu e armazenamento.
+
+    A convenção de nomenclatura da AWS para instâncias EC2 segue um padrão que ajuda a identificar as características de cada instância. Usando o exemplo m5.2xlarge, aqui está o que cada parte do nome representa:
+
+        m: Indica a família de instâncias. No caso, a letra m refere-se à família General Purpose, que oferece um equilíbrio entre CPU, memória e rede.
+        5: Esta parte indica a geração da instância. O número 5 significa que é a quinta geração dessa família de instâncias.
+        2xlarge: Este é o tamanho da instância. Instâncias de tamanho xlarge têm uma quantidade específica de CPU e memória, e o número antes disso (2x) indica múltiplos desse tamanho básico. Então, uma instância 2xlarge tem o dobro de recursos de uma xlarge.
+        Outros exemplos de famílias de instâncias incluem:
+
+        c para Compute Optimized (otimizada para CPU)
+        r para Memory Optimized (otimizada para memória)
+        g para Accelerated Computing (com GPUs)
+
+    Instancia General Purpose - M name
+        -> Como o nome diz, otimo para uso generalisado para diferentes cargas de serviço
+        -> balanço entre computação, memoria e network.
+        -> Usado geralmente para web server ou repositorio de codigo.
+        -> usado como web server para back ou front, etc.
+        -> é o utilizado no curso.
+
+    Instance Compute Optimized - C name
+        -> otimos para atividades de consumo excessivo, que precisam de alta performance em seus processadores.
+        -> Tais como Batch processing workloads, Media Transcoding, High performance web server,
+        hich performance computing (HPC), Scientific modeling, Machine learning e dedicated gaming servers
+
+    Memory Optimized Instance - R name R from ram
+        -> Performance rapida para cargas de trabalho com muita carga de dados em memoria.
+        -> Bom para Alta performance, banco de dados relacional e nao relacional,
+        distributed web scale cache stores, in-memory database optimized for BI,
+        aplicaçoes performando processamento em tempo real de grandes datas desestruturadas
+
+    Storage Optimized
+        -> Otimo para cargas de trabalho que necessitam de ler e escrever sequencialmente uma
+        grande carga de grupo de dados em um armazenamento local.
+        -> Bom para High frequency online transaction processing (OLTP) systems
+        -> Base de dados relacional e nao relacional, cache para in memory databases, like redis,
+        data werehouseing applications, distributed file systems.
+
+    -> PARA MAIS INFOS www.ec2instances.info
+
+
+    34. FIREWALLS DAS INSTANCIAS EC2
+    SECURITY GROUPS
+        -> SEGURANÇA AWS FUNDAMENTAL PRIMARIA.
+        -> CONTROLA O FLUXO PERMITINDO OU NAO A ENTRADA E SAIDA DAS INSTANCIAS EC2.
+        -> SECURITY GROUPS CONTEM SOMENTE ALLOW RULES/REGRAS DE PERMISSIONAMENTO.
+        -> CONFIGURAÇOES POR IP OU POR SECURITY GROUP QUE FUNCIONA COMO FIREWALL.
+        -> COMO FIREWALL REGULAM O ACESSO AS PORTAS DO SERVER.
+        -> AUTORIZAR RANGES DE IPV4 E IPV6 ESPECIFICAR OS IPS 192.168.0.0, ETC.
+        -> CONTROL OF INBOUD NETWORK(FROM OTHER TO THE INSTANCE). Controle de entrada de fluxo
+        -> CONTROL OF OUTBOUND NETWORK(FROM THE INSTANCE TO OTHER). Controle de saida de
+        -> EXEMPLO: SOURCE = 0.0.0.0/0 significa todos os ips
+                    SOURCE = 122.149.196.86/32
+        -> PODEMOS ATRELAR AS REGRAS A MULTIPLAS INSTANCIAS
+        -> PODEMOS ESPECIFICAR REGIÇOES E REDES VPC EXCLUSIVAS VIRTUAL PRIVATE CLOUND VPC
+        -> EXEMPLO BLOQUEANDO ACESSOS DA EUROPA ESTE CASO VOCE ESTEJA EM ALGO QUE EXIJA ACESSO
+        SOMENTE DA LESTE.
+        -> BOM COSTUME É MANTER UM SECURITY GROUP SOMENTE PARA SEU ACESSO SSH
+        -> PROBLEMAS DE "TIME OUT" PODEM SER UM PROBLEMA DE SECURITY GROUP
+        -> PROBLEMAS DE "CONNECTION REFUSED", É PROBLEMA DA APLICAÇÃO OU ELA NAO INICOU
+        -> POR DEFAULT AS CONEXÕES EXTERNAS SAO BLOQUEADAS, E AS SOLICITAÇOES INTERNAS PARA O
+        EXTERNO AUTORIZED.
+        -> CONSIGUIMOS AUTORIZAR ACESSO DE SECURITY GROUPS EM UMA INSTANCIA,
+        DE FORMA QUE OUTRAS INSTANCIAS PODEM TER SECURITY GROUPS DIFERENTES POREM COM ACESSO A
+        PRIMEIRA INSTANCIA.
+        -> EXEMPLO: INSTANCIA 1 -> AUTORIZE INSTANCIA 2, ENTAO INSTANCIA 2 LOGA EM INSTANCIA 1
+
+    CONHECENDO AS PORTAS CLASSICAS:
+        -> PORT 22 = SSH (SECURE SHELL) - LOGAR EM UMA INSTANCIA EC2 LINUX
+        -> PORT 21 = FTP (FILE TRANSFER PROTOCOL) - FAZ UPLOAD A UM SHARE
+        -> PORT 22 = SFTP (SECURE FILE TRANSFER PROTOCOL) - FAZ UPLOAD PELO SSH
+        -> PORT 80 = HTTP - ACCESS UNSECURED WEBSITES
+        -> PORT 443 = HTTP - ACCESS SECURED WEBSITES
+        -> PORT 443 = HTTPS - ACCESS SECURED WEBSITES
+        -> PORT 3389 = RDP REMOTE DESKTOP PROTOCOL - LOGAR EM UMA INSTANCIA WINDOWS.
+
+    HANDS ON:
+        -> NA ABA DE INSTANCIAS -> NA LISTA DAS INSTANCIAS, CLIQUE NO ITEM DA INSTANCIA
+        ENTAO -> ESTARA NA TELA DA INSTANCIA, E TERA UMA ABA CHAMADA SECURITY ->
+        Entao veremos as inbound rules e as outbound rules.
+        -> PARA ver as regras de forma mais completa podemos acessar a aba NETWORK & SECURITY
+        entao ira renderizar uma lista com os Security Groups, cada item da lista tem um ID
+        -> possui a ABA INBOUND RULES, que cuida das conexoes externas para a intancia EC2.
+        -> Geralmente a lista possui duas regras SSH e HTTP  liberado para qualquer faixa de ip.
+        -> Aqui especificamos nossa faixa de ip para o ssh hehe.
+            -> Existe ate mesmo uma funçao select de especificar seu ip para o ssh
+        -> ABA OUTBOUND RULEZ sao as regras de conexoes interna para externa da aplicação automatico vem a conexao
+        liberada para todas as faixas
+
+    SSH Summary table
+        -> Como conectar nos servers linux ou mac, ate no windows >= 10
+        -> em windows <10 usamos putty.
+        -> AWS FERRAMENTA EC2 INSTANCE CONECT conecta com todos os SOs
+        -> Vamos usar EC2 INSTANCE CONECTION
+        -> USER PARA CONEXAO SSH EM INSTANCIAS EC2 = ec2-user@${instance_ip}
+        -> Apos isso precisamos usar um tal de ssh -i em arquivo.PEM ec2-user@3.259.26.200
+        -> Sera possivel baixar o pem na criaçao ded instancia na seçao de par de chaves (key pair),
+        selecione criar novo par de chaves, ai sera possivel baixar o arquivo .pem
+        -> caso ja tenha a instancia so precisa criar um novo par de chavez e modificar as configs da
+        instancia para aceitar o novo par de chavez.
+        -> Apos aquele comando precisamos incrementar permissoes na chave, atravez do comando:
+        CHMOD 0400 EC2TUtorial.pem.
+        entao novamente o comando ssh -i chave.pem ec2-user@{instance_ip}
+        então yes.
+        -> estaremos logado no console da instancia.
+        -> comandos ping, exit
+        -> Para conectar via ssh em um win < 10 é necessario usar o Putty
+        -> Software free para windows
+        -> apos baixar utilizamos o app que vem junto PUTTYGEN, entao carregamos nosso arquivo
+        com o botão LOAD o arquivo .PEM, para transformalo em .PPK entao botão SAVE PRIVATE KEY
+        salve como .PPK
+        -> ENTAO ABRIMOS O APP PUTTY, copiamos o id da instancia, o nome fica como ec2 instance.
+        -> Setamos SSH no checkbox e tambem passamos o user ec2-user@instanceip
+        -> entao na ABA DA ESQUERDA NO MENU SSH > NA ABA AUTH, FIND PRIVATE KEY ->
+        botão browser e carregue o arquivo .PPK entao em SAVE e depois open, entao podera utilizar
+        a instancia Windows.
+        -> Conectar via SSH em win > 10 VIA POWER SHELL
+        -> script SSH, mostra os comandos no shell.
+        -> Na pasta onde temos o arquivo .PEM usamos ssh -i .\key.pem ec2-user@instanceip
+        -> then YES para trust no SSH.
+        -> Caso precise das permissoes estilo CHMOD como no linux, sera necessario clicar
+        com o botão direito, propriedades > segurança > SYSTEM > ADVANCED -> CHANGE OWNER
+        assim voce consegue deixar o arquivo somente para voce. -> e tambem liberar acessos
+        Ainda podemos remover os outros usuarios do acesso do arquivo
+        No object name coloque o nome do seu user e check names
+        remova as entidades que nao devem ter acesso ali tambem
+
+    AWS INSTANCE CONECT
+        -> Na lista de instancias, clicamos no item da instancia na lista, entao
+        no toolbar temos um botão chamado connect. -> Clicamos neste botão,
+        abrira uma nova pagina com um input de username.
+        -> Nos permite uma conexão ssh baseada em browser criando uma ssh key para o
+        momento e conectando diretamente sem precisar manejar chaves de acesso.
+        -> TCHARAM ESTA NO TERMINAL SSH
+        -> CASO PROBLEMA DE CONEXÂO VERIFIQUE O IPV6 tanto as regras quando seu proprio.
+        -> Praticando usando IAM ROLES como Key cloak red rat
+        -> AWS INSTANCE Conect vem com um CLI AWS instalado com alguns comandos aws,
+        podemos então utilizar o comando "aws iam list-users"
+        -> Podemos configurar nossas credencias com AWS configure
+        -> Especificamos Access key ID, aws secre accesss key, region name, output format
+        -> Mas é uma ma ideia pois libera acesso a maioria dos usuarios que acessarem a isntancia
+        -> em vez disso na INSTANCIA NA ABA SECUIRTY, vinculamos uma IAM ROLE a instancia,
+        em MODIFY IAM RULE -> selecionamos uma iam rule em um select e salvamos.
+        entao apos modificar e salvar um iam rule a instancia recebemos um usuario no SSH AMAZON INSTANCE
+        -> ASSIM E COMO PROVIDENCIAMOS AWS CREDENTIALS AO SERVER EC2
+
+
+    43. EC2 OPÇOES DE COMPRA PARA ECONOMIZAR.
+        -> Alugar a instancia por longos periodos diminui o preço.
+        -> Podemos optar por alugar instancias convertiveis caso sua aplicaçao seja flexivel.
+        -> Podemos especificar a instancia e sua potencia pela nossa quantidade de dinheiro ate certo tempo.
+        Ex: 1000 dolares ate final do mes pode gerar x instanncia enquanto 500 dolares ao final do mes outra.
+        -> TEMOS SPOT INSTANCES, para aplicaçoes softs, menos importantes pq pode perder a instancia ?? wtf.
+        -> TEMOS DEDICATED HOST aluga o server por completo e controla tudo.
+        -> DEDICATED INSTANCES onde sua instancia nao divide hospedagem com ninguem.
+        -> EC2 ON DEMAND, pague pelo que usar, pagamento por hora, maior custo, melhor para pequenos
+        termos em questao de aplicaçao  e cargas ineterruptas
+    EC RESERVED INSTANCES
+        -> 72% de desconto comparado ao ondemand, cobranças unicas dependendo de tipo de instancia, os,
+        regiao, tenancy??? ou OS.
+        -> quanto maior o periodo de aluguel menor o preço, formas de pagamento,
+        opçao de reservar instancia regional ou zonal??
+        -> Pode vender ou comprar estas intancias no market place e bom para databases.
+    CONVERTIBLE RESERVED INSTANCE
+        -> Pode mudar seu tipo de instancia, familia da instancia, OS, Escopo e tenacididade.
+    EC2 SAVING PLANS
+        -> Commit para certos tipos de uso 10$/hora por 1 a 3 anos
+        -> Cobrança sobre dedmanda
+        -> Locked apenas para m5 e us-eats-1
+        -> Troca OS, SIZE E TENANCY
+        -> TENANCY: HOST, DEDICATED OU DEFAULT.
+    EC2 SPOT INSTANCES
+        -> ATÈ 90% de desconto comparado ao ON-DEMAND
+        -> Define um valor para pagar e quando atinge voce perde a instancia.
+        -> Mais eficiente em questao de custo
+        -> Usado em cargas de trabalho risiliente a falha
+        -> Batch Jobs
+        -> Data analysis
+        -> Image processing
+        -> Cargas de trabalho distribuidas
+        -> Ou com começo e fim flexivos
+        -> Nao serve para base de dados ou Trabalhos CRITICOS.
+    EC2 DEDICATED HOSTS
+        -> Server fisico completamente dedicado com capacidade para instancias EC2
+        completamente dedicado a seu uso.
+        -> Allows you adrres compliance requirementns and use your existing server0bound,
+        software licences (per-socket, per-core, per-VM software licenses).
+        "Servidor Dedicado: O servidor físico é alocado exclusivamente para você, diferente das instâncias normais de EC2, onde o hardware é compartilhado entre vários usuários da AWS.
+         Atende a Requisitos de Conformidade: A hospedagem dedicada ajuda a atender regulamentações que exigem isolamento total do ambiente, o que pode ser necessário para alguns setores, como financeiro e de saúde.
+         Licenciamento de Software: Ao usar um servidor dedicado, você pode usar licenças de software vinculadas ao servidor. Isso inclui licenças que dependem de:
+         Sockets: Licenças que cobram por soquete de CPU.
+         Cores: Licenças baseadas no número de núcleos de CPU.
+         VMs: Licenças aplicáveis por máquina virtual (VM), que em ambientes compartilhados poderiam ser mais difíceis de gerenciar.
+         Esses hosts dedicados são ideais para empresas que precisam do máximo controle do ambiente, isolamento completo e flexibilidade com licenças que dependem da estrutura do hardware."
+        -> OPÇOES DE COMPRA: ON DEMAND pay per second ou Reserved de 1 a 3 anos
+        -> MAIS CARO
+        -> IDEAL PARA BYOL, BRING YOUR OWN LICENSE, softwares com modelo de licensa complicados.
+        -> Ideal para companias com regras exigentes.
+    EC2 DEDICATED INSTANCES
+        -> Instancia dedicada a voce.
+        -> Pode dividir o hardware somente por outras instancias suas.
+        -> Nao controla o colocamento da instancia, mas pode alterar hardware da instancia.
+    CAPACITY RESERVATIONS
+        -> Reserve sobre demanda qualquer capacidade especificamente por qualquer tempo
+        -> sempre pode acessar ec2 CAPACITY se precisar
+        -> Sem tempo para commitment, criar e cancelar a qualquer hora sem descontos de cobrança
+        -> Pode combinar com Regional Reserved Instances e Saving Plans para ganhar descontos de cobrança.
+        -> Cobrado se iniciar a instancia ou nao.
+        -> Bom para pequenos termos, initerruptos cargas de trabalho que precisam estar em um AZ especifico
+        AZ = AVALIABILITY ZONE, zona de disponibilidade  localização fisica separada dentro de uma região
+        da AWS, cada região tem multiplas az que sao interconectadas com baixa latencia, mas separadas,
+        para aumentar a tolerancia a falhas, multiplas AZ, permitem que voce construço aplicaçoes resilientes
+         e tolrantes a falhas distribuindo seus recursos entre diferentes zonas e garantindo alta disponibilidade.
+
+
+    QUAL OPÇAO DE COMPRA È A IDEAL PARA MIM???
+        -> ON DEMAND: paga pelo que usa
+        -> RESERVED: Planeja usar por muito tempo e ganha disconto.
+        -> SAVING PLANS: Voce coloca a quantida de din que pode gstar com o tempo e ai sua instancia vai se adaptando
+        com o tempo.
+        -> SPOT INSTANCES: instancias com disconto para alugarem logo, pode ser chutado a qualquer momento voce desta instancia;
+        -> DEDICATED HOSTS: Como alugar o hotel inteiro e escolher tudo, no caso servidor.
+        -> CAPACITY RESERVATIONS: alugar um quarto pelo preço total sem nem mesmo saber se vai usar.
+
+
+    EC2 STORAGE OPTIONS -> EBS VOLUMES
+        -> EBS = ELASTIC BLOCK STORE.
+        -> É um driver de internet que voce consegue encaixar com as instancias
+        enquanto elas estao ativas.
+        -> Permite persistir data mesmo com o final da instancia ou dela mesma?
+        -> Pode montar somente uma instancia por vez (EM LEVEL CCP?)
+            CCP - Certified Cloud Practitioner
+        -> Tem a função atribuição multipla para alguns EBS
+        -> Quando voce cria um volume ebs ele fica associado a uma zona no mapa como
+        us-east-1a, entao nao podera usar em outra zona.
+        -> Funciona como se fosse um pendrive via internet.
+        -> O gratuito oferece 30gb de free EBS storage SSD ou magnetico de tipo generico
+        por mês.
+        -> Usaremos este no curso com gpt2 e gpt3 volumes??
+        -> Considerado um drive de internet, nao é fisico, usa a internet para fazer a
+        comunicação o que resulta em um pouco de lag.
+        -> EBS podes ser removidos de uma instancia para ir a outra rapidamente.
+        -> Precisa realizar um procedimento chamado SNAPSHOT para mover de uma instancia
+        a outra.
+        -> Em Configuraão avançada podemos controlar o tamanho, porem pagamos por subir
+        a capacidade.
+        -> Podemos instanciar mais de um volume EBS por vez em uma instancia.
+        -> Podemos marcar um checkbox DELETE ON TERMINATION, que deleta o EBS,
+        na terminação da instancia.
+        -> Por default o EBS padrão da instancia é deletado, os novos criados não.
+
+    HANDS ON EBS VOLUME
+        -> NA ABA INSTANCES -> SELECIONAR A INSTANCIA NA LISTA -> ENTAO ABA STORAGE
+        -> Encontramos um ROOT DEVICE e nele tambem um BLOCK DEVICE de 8GB
+        -> Se clicarmos no item da lista do volume, iremos a interface do volume block
+        -> Podemos ver se esta em uso e onde esta atrelado
+        -> TAMBEM conseguimos acessar pela aba elastic block volumes
+        -> Podemos Criar um novo volume por esta aba, escolher o tipo do volume.
+            -> Usaremos gp2 de 2gb, escolheremos a zona (que encontramos na aba network
+            depois esta info).
+            -> Apos criar o item da lista, podemos marcalo na lista entao usar o bottão
+            Actions.
+        -> BOTÃO ACTIONS -> OPÇAO ATTACH VOLUME -> Selecionamos a instancia que queremos
+        atrelar o EBS.
+        -> Entao novamente na aba STORAGE podemos ver os dois EBS listados na instancia.
+        -> Porem para usar se torna mais complicado precisamos formatar o EBS para montar
+        em uma instancia LINUX. EBS VOLUME AVALIABLE FOR LINUX é o search necessario.
+        -> para deletar bottão actions delete volume.
+            -> ou entao deletando a instancia caso os ebs volumes estejam taggeados para deletar
+            junto a instancia.
+            -> editavel na aba de EBS VOLUMES e tambem ao iniciar a instancia em opçoes avançadas.
+
+    EBS SNAPSHOTS
+        -> Backup do seu ELASTIC BLOCK STORAGE EBS em um tempo definido.
+        -> Não é necessario desanexar o ebs mas é recomendado para backup.
+        -> Você pode copiar backups entre as zonas, interessante ja que os ebs em si nao mudam a zona
+        -> FEATURES -> SNAPSHOT ARCHIVE -> move o backup para um arquivamento, sendo 75% mais
+        barato de guardar.
+            -> demora entre 24 a 72 horas para restaurar este arquivo se arquivado.
+        -> FEATURES -> RECYCLE BIN -> Após deletado fica um tempo na lixeira, que voce mesmo pode
+        definir entre 1 dia e 1 ano, para voce poder restaurar o EBS caso necessario.
+        -> FEATURES -> FAST SNAPSHOT RESTORE (FSR) -> Forçamento completo da inicialização de um snapshot
+        para nao ter latencia, ja no primeiro uso. ($$$ maybe its expensive)
+
+    SNAPSHOT HANDS ON
+        -> NA ABA ELASTIC BLOCK STORE VOLUMES-> BOTÃO ACTIONS -> CREATE SNAPSHOT
+            -> Colocamos a nomeclatura e criamos o SNAPSHOT.
+        -> NA ABA EBS SNAPSHOTS -> Mostra uma lista com seus snapshots,
+        -> Podemos copialo para uma nova região
+        -> Podemos criar um novo EBS a partir de um snapshot
+        -> Na tela de SNAPSHOT, temos um top bar button chamado recycle bin,
+        que protege e guarda EBS SNAPSHOTS E AMIS AMAZON MACHINE IMAGES de remoção
+        sem querer.
+        -> RECYCLE BIN FUNCIONA ATRAVEZ DE REGRAS QUE DEVEM SER CONFIGURADAS ANTES
+        DE FUNCIONAR, configuramos um snapshot restore rule, sua arquitetura, tempo de delete
+
+    AMI - Amazon Machine Image
+        -> São customizações de um instancia EC2.
+        -> Podemos adicionar sua propria configuração de software, sistema operacional, monitoramento
+        -> Tem boot mais rapido / configuração da instancia pq seu sistema ja esta pre-empacotado.
+        -> Apos construidos ficam em uma região especifica, porem pode ser copiado por regioes
