@@ -623,3 +623,134 @@
 
     EC2 Instance Store
         ->
+
+    AWS COBRA POR ENDEREÇO IPV4 PUBLICO.
+        ->  $3.6 por mes
+        -> Contas novas possuem 750 horas de ipv4 gratis, pelos primeiros 12 meses.
+        -> VOCÊ PODE VERIFICAR SUAS DESPESAS TOTAIS EM BILLY AND COST NO PAINEL AWS
+            -> Depois vá na aba BILlS -> teremos um sumario de cobranças.
+        -> Para verificar seus endereços de ip, podemos ir em IPAM -> Amazon VPC IP ADRESS MANAGER
+
+    EC2 INSTANCE STORE
+        -> EBS sao drives de internet com performance limitada.
+        -> Caso queiramos mais potencia de HD usamos EC2 Instance Store.
+            -> Este vai attached atrelado a instancia tbm
+        -> EC2 é uma virtual machine ligado a uma potente maquina.
+        -> INSTANCE STORE È O HARDDRIVER DA MAQUINA EM QUE ESTA A INSTANCIA.
+        -> Caso a instancia seja deletada o INSTANCE STORE VAI JUNTO,
+        chamado de ephemeral storage.
+        -> BOM PARA BUFFERS - CACHE - SCRATCH DATA - TEMPORARY CONTENT
+        -> O melhor para estorage neste caso é o EBS.
+        -> Perigo de perder os dados caso o hardware falhe.
+        -> Por isso backup e replicação sao por suas responsas e bem necessarios.
+
+    EBS VOLUME TYPES
+    -> São 6 tipos:
+        -> gp2 / gp3 (SSD) - Unidade de volume SSD generico, balançado entre performance
+        e preço, bom para uma variedade grande de cargas de trabalho.
+        -> io1 / io2 express (SSD) - Unidade SSD de alta performance, para sistemas com
+        pouca latencia e grande carga de dados.
+        -> st1 (HDD) - Unidade de custo baixo para acesso frequence e cargas de trabalho
+        elevadas.
+        -> sc1 (HDD) - Unidade de menor custo ainda, para acessos menores.
+
+    -> Como caracterizar cada EBS?
+        -> Throughput (Taxa de transferencia), IOPS ( input/output operations per second).
+        -> Possui documentação.
+        -> ATENÇÃO, somente gp2, gp3, io1, io2 podem ser usados como volume de boot.
+
+    -> Vantages do SSD:
+        -> Custo efetivo, baixo ping, pode ser bootavel, pode ser virtual desktop,
+        ambiente de desenvolvimento/teste.
+        -> Possuem entre 1 GiB e 16GiB TERA bits
+        -> gp3 -> Pode configurar, Versão mais recente e usa uma linebase de 3000 IOPS e um Throughput de 125MiB/s
+        -> gp2 ->Não pode configurar fica atrelado ao tamanho, versão antiga, mas algumas podem subir alem de 3000 IOPS,
+            -> Tamanho e iops deste setao atrelados, quanto maior o volume,
+            maior a quantidade de IOPS, podendo ir ate o max de 16000.
+            -> Sao 3 IOPS por GB, com o maximo de 5,334 GB de tamanho.
+
+    -> Vantagens do Provisioned IOPS (PIOPS) SSD:
+        -> Aplicações de negocio com IOPS Sustentavel e performatico.
+        -> No caso mais de 16000 IOPS.
+        -> Perfeito para grandes bases de dados com bastante carga de trabalho,
+        -> Modelos: io1 (configuravel) (4Gib - 16 Tib):
+            -> Max PIOPS: 64000 na EC2 Nitro (Nitro EC2) & 32000 IOPS
+        -> Modelos: io2 Block Express (4GiB - 64 Tib):
+            -> Latencia de sub-milisegundo
+            -> Max PIOPS: 256000 com um media de IOPS:GB de 1000:1
+
+    -> Vantagens do HDD:
+        -> Não podem ser usados como volume de boot.
+        -> 125GiB ate 16TiB.
+        -> (ST1) Throughput Optimized HDD
+            -> Usado em Big Data, Data Warehouse, Log Processing.
+            -> Max throughput 500 MiB/s - max IOPS 500
+        -> (SC1) Cold HDD:
+            -> Para dados usados em menos frequencia.
+            -> Cenarios onde o custo menor é o mais importante.
+            -> Max throughput 250 MiB/s - max IOPS 250
+
+    EBS Multi-Attach - io1/io2 family
+        -> Usar a mesma instancia EBS em multiplas instancias na mesma AZ.
+        -> Apenas para io1 and io2.
+        -> Instancias com permissao completa de escrita e leitura.
+        -> High aplication avaliability in case of clustered linux applications.
+            -> Disponivel para multiplos acessos linux em cluster.
+        -> Aplications must manage concurrent write operations.
+            -> Aplicação deve aceitar operações de gravaçao simultaneas.
+        -> Disponivel para 16 instancias por vez.
+        -> Sistema precisa ser cluster aware, tipos de arquivo diferentes de XFS
+        ou EX4.
+            ->  o sistema de arquivos deve ser compatível com ambientes de clusters,
+             onde múltiplas instâncias acessam o mesmo volume.
+
+    AMAZON EFS - ELASTIC FILE SYSTEM
+        -> É um protocolo padrão que permite o acesso remoto a sistemas de
+        arquivos como se fossem locais, muito comum em ambientes Linux.
+        -> Gerenciador de arquivos de sistemas de internet, pode ser atrelado a varias
+        instancias, ate mesmo em zonas amazon diferentes.
+        -> Alta disponibilidade, escalavel, caro 3xgp2, pay-per-use
+        -> Casos de uso do EFS:
+            -> Manutenção de conteudo, web serving, data sharing, WordPress
+        -> Usa internamente o protocolo NFS.
+            -> O Amazon EFS utiliza o protocolo NFSv4 e NFSv4.1, permitindo que múltiplas instâncias EC2
+             (e até on-premises) acessem o mesmo sistema de arquivos de forma simultânea, facilitando o
+             compartilhamento de dados em clusters.
+        -> Para controlar o acesso a seu EFS é necessario setar um security group.
+        -> Compatibilidade somente com linux based AMI (Amazon Machine Image).
+        -> Pode habilitar a criptografia em descanso no EFS drive, utilizando KMS.
+            -> KMS (Key Management Service): É o serviço de gerenciamento de chaves da AWS,
+             usado para criar e gerenciar chaves de criptografia.
+        -> Usa POSIX file system (~Linux) that has standard file api???
+            -> POSIX (Portable Operating System Interface): É um conjunto de padrões de
+            interoperabilidade para sistemas operacionais, garantindo que o sistema de arquivos tenha comportamentos compatíveis com os padrões UNIX.
+            No EFS: O EFS é compatível com POSIX, o que significa que ele oferece o mesmo comportamento esperado de sistemas de arquivos locais em Linux.
+            Os usuários podem usar APIs padrão de arquivos (como open, read, write, close) para manipular arquivos no EFS, exatamente como fariam em um sistema de arquivos Linux.
+        -> Systema de arquivos expande automanticamente.
+        -> Pay-per-use.
+        -> Sem possibilidade de configurar a capacidade total.
+
+
+    -> EFS - Performance & Classes de armazenamento.
+        -> EFS Scale:
+            -> 1000s of concurrent NFS clients, 10 GB+ /s throughput
+            -> Grow to Petabyte-scale network file system, automatically
+        -> Performance Mode ( Ativado na criação de EFS):
+            -> General Purpose (default): latency sensitivy-cases (web server, CMS, etc...)
+            -> Max I/O: higher latency, throughput, higly parallel (big data, media processing)
+        -> Throughput Mode:
+            -> Bursting - 1 TB = 50MiB/s + burst of up to 100MiB/s
+            -> Provisioned - set your throughput regardless of storage size,
+            ex: 1 GiB/s for 1TB Storage
+            -> Elastic - Automatically scales throughput up or down based on your workloads
+                -> Ex: Up to 3GiB/s for reads and 1 GiB/s for writes.
+                -> Usado em cargas de trabalho imprevisiveis
+        -> EFS Storage Class
+            -> Storage Tiers (lifecycle management feature - move file after N days)
+            -> Standard: for frenquently accessed files
+            -> Infrequent access (EFS-IA): cost to retrieve files, lower price to store.
+            -> Archive: rarely accessed data (few times each year), 50% cheaper.
+            -> Implement lifecycle policies to move files between storage tiers
+        -> Avaliability and Durability
+            -> Standard: Multi-AZ, great for prod
+            -> One Zone: One AZ, great for dev, backup enabled  by default, compatible with IA(EFS One Zone-IA)
