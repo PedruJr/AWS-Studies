@@ -754,3 +754,39 @@
         -> Avaliability and Durability
             -> Standard: Multi-AZ, great for prod
             -> One Zone: One AZ, great for dev, backup enabled  by default, compatible with IA(EFS One Zone-IA)
+
+    AMAZON EFS - ELASTIC FILE SYSTEM - HANDS ON
+        -> Na aba Elastic File System, so jogar no search -> Create File System ->
+        Então escolhemos um nome para o nosso EFS e um select para nosso VPC (VIRTUAL PRIVATE CLOUND)
+        -> Então clicamos em customizar para ajustar nossa EFS.
+        -> EFS -> REGIONAL MULTIPLAS AZ (boa para prod) ou ONE ZONE SOMENTE UMA AZ (boa para dev)
+        -> Opção de AUTOMATIC BACKUPS ?
+        -> Opção de lifecycle management, move os dados entre as tiers de databases, para poupar custos.
+            -> Escolhemos quantos dias transformamos para IA (infrequent Access) (cost to retrive files)
+            e tambem escolhemos os dias para Archive. (acessado poucas vezes ao ano)
+            -> Podemos escolher para standard tbm mas nao acho recomendado. (acessado frequentemente)
+            a menos que, voce pode configurar que apos o arquivo antigo ser acessado apos estar em outra tier
+            de armazenamento, para retornar o arquivo para um de uso mais frequente como o standard.
+        -> Podemos marcar o checkbox de rest encryption, para ativar a criptografia em horarios de menos acesso/descanso?
+        -> Entao escolhemos o PERFORMANCE SETTINGS -> Entre Enhanced: adaptatibilidade a necessidade e
+        Bursting: transferencia basica para performance basica podendo ativar taxas de transferencias mais altas em momentos
+        de necessidade.
+        -> Elastic (Taxa de transferencia escala automaticamente com a data) pago pelo que voce usa.
+        -> Provisioned: Você seleciona a taxa de transferencia.
+            -> abre um campo para setar Throughput
+        -> Nas configs ADDITIONAL SETTINGS
+            -> Performance mode para General Purpose ou Max IO (bom para big data).
+        -> Best configs, Enhanced, Elastic, General Purpose.
+
+    -> Aba NETWORK ACCESS
+        -> Aqui selecionamos a VPC de operação.
+        -> Caso tenha escolhido nas configs Multiple AZ, vamos ter varias opçoes de AV zones,
+        tendo que inserir por select um subnet ID, podemos ate setar um ip address especifico,
+        os security groups, e tambem podemos remover uma linha de AZ, sao varias linhas com estas,
+        definiçoes para cada AZ que voce quiser o EFS.
+        -> Então apos este passo vamos para tela de system policy, vamos pular por hora por ser bem,
+        avançado a parte desta tela.
+        -> Então proxima tela com todas as infos do EFS então botão create.
+        -> EFS Voce paga pela quantidade de dados usadas.
+        -> APOS CRIADO DEVEMOS ATRELAR A UMA INSTANCIA EC2.
+        -> Instancia Amazon Ubuntu 7:30

@@ -202,3 +202,39 @@ Resultado:
 Você acertou 7 de 10 questões. Isso indica que seu nível de inglês está em um nível intermediário, com uma boa compreensão de tempos verbais e gramática básica, mas com necessidade de atenção a detalhes como preposições e uso correto de perguntas.
 
 
+sistemas de gerenciamento de conteúdo (CMS)
+
+EFS - Desempenho & Classes de Armazenamento
+O Amazon EFS oferece diferentes modos de desempenho e classes de armazenamento para atender a diversas necessidades de aplicações.
+
+Escalabilidade do EFS (EFS Scale)
+1000s of concurrent NFS clients, 10 GB+/s throughput
+Escala: O Amazon EFS suporta milhares de clientes NFS conectados simultaneamente com uma taxa de transferência (throughput) de mais de 10 GB/s, o que permite uso massivo e múltiplos acessos simultâneos.
+Crescimento para sistema de arquivos em escala de petabytes, automaticamente
+O EFS escala automaticamente até alcançar a capacidade de petabytes (1 petabyte = 1.024 terabytes), permitindo que o armazenamento aumente ou diminua com base na demanda da aplicação.
+Modo de Desempenho (Performance Mode)
+O Performance Mode é definido ao criar o EFS, e ele otimiza o EFS para diferentes necessidades de desempenho.
+
+General Purpose (padrão): Para aplicações com baixa latência, como servidores web ou sistemas de gerenciamento de conteúdo (CMS), onde a resposta rápida é essencial.
+Max I/O: Para cargas altamente paralelas (como processamento de big data ou mídia). Este modo oferece maior throughput com maior latência, ideal para aplicações que processam grandes volumes de dados simultaneamente.
+Modo de Throughput (Throughput Mode)
+O Throughput Mode define a taxa de transferência de dados no EFS e é configurável para atender diferentes necessidades de armazenamento e desempenho.
+
+Bursting: Oferece uma taxa base de 50 MiB/s por terabyte de armazenamento, com picos de até 100 MiB/s para necessidades temporárias de maior taxa de transferência.
+Provisioned: Permite definir o throughput independentemente do tamanho do armazenamento, como 1 GiB/s para 1 TB de armazenamento, garantindo desempenho constante.
+Elastic: Escala automaticamente o throughput com base nas necessidades do trabalho, com picos de até 3 GiB/s para leituras e 1 GiB/s para gravações, ideal para cargas de trabalho imprevisíveis.
+Classes de Armazenamento do EFS (EFS Storage Class)
+O EFS oferece classes de armazenamento diferentes para otimizar o custo e o desempenho de acordo com a frequência de acesso aos dados.
+
+Standard: Armazenamento para arquivos acessados frequentemente.
+Infrequent Access (EFS-IA): Armazenamento com custo menor, mas que cobra pelo acesso aos arquivos, ideal para dados raramente acessados.
+Archive: Para dados raramente acessados, apenas algumas vezes ao ano, sendo 50% mais barato que as outras classes. Políticas de ciclo de vida podem ser configuradas para mover arquivos entre as classes automaticamente após um período especificado (em dias).
+Disponibilidade e Durabilidade
+Standard (Multi-AZ): Garante alta disponibilidade e durabilidade em múltiplas zonas de disponibilidade (AZs), ideal para ambientes de produção onde é fundamental garantir a continuidade do serviço.
+One Zone: Armazenamento em uma única zona de disponibilidade (AZ), recomendado para desenvolvimento e testes. Vem com backup ativado por padrão e compatibilidade com a classe IA (EFS One Zone-IA), com um custo mais acessível.
+Resumo das Siglas
+NFS (Network File System): Protocolo para acesso remoto a arquivos como se fossem locais, suportado no EFS para múltiplos clientes.
+MiB (Mebibyte) e GiB (Gibibyte): Unidades de armazenamento em base binária (1 MiB = 1.048.576 bytes e 1 GiB = 1.073.741.824 bytes).
+AZ (Availability Zone): Zona de disponibilidade dentro de uma região da AWS.
+IA (Infrequent Access): Classe de armazenamento para acesso infrequente.
+Essas características permitem que o Amazon EFS seja flexível, seguro e otimizado para diversos tipos de aplicações, com foco em alta disponibilidade, escalabilidade automática e otimização de custo.
