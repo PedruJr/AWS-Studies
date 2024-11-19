@@ -789,4 +789,141 @@
         -> Então proxima tela com todas as infos do EFS então botão create.
         -> EFS Voce paga pela quantidade de dados usadas.
         -> APOS CRIADO DEVEMOS ATRELAR A UMA INSTANCIA EC2.
-        -> Instancia Amazon Ubuntu 7:30
+        -> Instancia Amazon Ubuntu -> Tipo de instancia t2.micro que é free -> sem key ou com key pair
+        networksettings padrao, criara um novo security group -> Storage 8gb gp2 -> podemos adicionar um
+        file system somente apos adicionar uma subnet -> que podemos add na config de network ->
+        Subnet e escolhemos a AZ -> e voltamos para o FS File System -> Selecionamos o checkbox EFS nao o FSx
+        Entao armazenamos a info do MOUNT POINT /mnt/efs/fs1 -> Launch instance -> Então comparamos o envio de arquivo no
+        mount path no EFS  /mnt/efs/fs1 as instancias com o mesmo efs compartilham arquivos ali, compartilham security groups.
+
+    EBS vs EFS
+        -> EBS:
+            -> Conectam apenas uma instancia por vez, menos os modelos multi-attach io1/io2
+            -> Travados os volumes em suas AZ, porem os backups podem ser cross AZ (POR SNAPSHOT)
+            -> gp2 IO aumenta com o tamanho do disco.
+            -> gp3 & io1: aumentao seu IO independentemente
+            -> EBS backups usam IO e voce nao deve utilizalo enquanto a aplicaçao esta com muito trafego.
+            -> EBS default que sao os criados com a instancias sao deletados automaticamente junto com a instancia
+            a menos que voce configure o contrario disso.
+
+        -> EFS:
+            -> Feito para conectar 100 instancias ate mesmo cross AZ
+            -> compartilha arquivos de websites como wordpress
+            -> somente para linux arquivos POSIX
+            -> è mais caro que o EBS.
+            -> Pode nivelar o acesso dos arquivos para poupar dinheiro.
+
+    58. Scalability & High Availability
+        -> Escalabilidade pode ser divida em Escalabilidade VERTICAL e HORIZONTAL (ELASTICITY)
+        -> São relacionados porem diferentes.
+        -> Vertical:
+            -> significa aumenta o tamanho da INSTANCIA AWS
+            -> Ex: Junior atende 5 calls por minuto, senior 10 calls por minuto
+            -> Amazon Ex: t2.micro instance para uma instancia t2.large
+            -> Escala vertical é comum em aplicações de big data e sistemas não distribuidos.
+            -> RDS, ElastiCache são serviços que escalam verticalmente.
+            -> Possui um limite, dado pelo hardware.
+        -> Horizontal:
+            -> Significa incrementar o numero de instancias/systemas para sua aplicação.
+            -> Ex: Em vez de contratar um Junior e um senior, contratar 3 juniors, atendem
+            10 calls por minuto.
+            -> Escalas horizontais, implicam em sistemas distribuidos.
+            -> Bem comum para aplicaçoes modernas.
+            -> È facil horientalizar e escalar graças as tecnologias clound como a EC2.
+            -> Auto Scaling Group, Load Balancer
+            -> In quando diminui as instancias, out quando aumenta
+
+        -> High Availability:
+            -> Combina com escalamento horizontal, andam de maos dadas.
+            -> High avaliability significa ter o seu sistema em pelomenos 2 datacenters.
+            -> Isso garante a sobrevivencia em caso de perda de dados de um data center.
+                -> Caso um pare o outro assume e vice versa.
+            -> Multiplas AZ para garantir isso.
+            -> Load Balancer multi AZ.
+
+    59. Elastic Load Balancing (ELB)
+        -> Load Balancing são servers ou downstreams? que recebem o trafego
+        e distribui ele entre os backends.
+        -> Distribui a carga de trabalho entre os backends.
+        -> Expoe somente um DNS para aplicação.
+        -> Possui verificadores que identificam a condição do backend antes de enviar a
+        carga, enviando somente para os funcionais.
+        -> Pode fazer verificação de health check na instancia atravez do ELB.
+        -> Prove SSL termination, entao garante um HTTPS encrypted traffic no seu site.
+        -> Podemos reforçar a aderencia atravez de cookies.
+        -> HIGH AZ.
+        -> Seperação de trafico publico do trafico privado.
+        -> È um Balanceamento de cargas controlado (MANAGED LOAD BALANCER).
+            -> AWS garante sua funcionalidade.
+            -> Cuida das questões de manutenção, upgrades e disponibilidade.
+            -> Possui alguns padrões de configuração.
+        -> Custa menos voce programar seu proprio LOAD BALANCER, porem requer muito mais trabalho.
+        -> Este é integrado com uma grande parte de serviços aws.
+            -> EC2, EC2 Auto Scaling Groups, Amazon ECS, AWS Certificate Manager (ACM),
+            CloudWatch, Route 53, AWS WAF, AWS Global Accelerator.
+
+    Health Checks on ELB
+        -> Trabalham em uma porta e rota especifica (/health geralmente).
+        -> Garante a funcionabilidade do backend antes de enviar a informação.
+        -> Geralmente traz 200 de resposta caso esteja ok a api.
+        -> POSSUIMOS 4 TIPOS DE LOAD BALANCER na AWS:
+            -> Classic Load Balancer (v1 - old generation - 2009 - CLB):
+            Compativel com HTTP, HTTPS, TCP, SSL (SECURE TCP),
+            Amazon nao quer que usemos mais este, porem deixa disponivel mesmo assim.
+
+            -> Application Load Balancer (v2 - new generation) - 2016 - ALB:
+            Compativel com HTTP, HTTPS, WEBSOCKET
+
+            -> Network Load Balancer (v2 - new generation) - 2017 - NLB:
+            Compativel com TCP, TLS (Secure TCP), UDP.
+
+            -> Gateway Load Balancer - 2020 - GWLB
+            Opera na 3 layer de internet - Protocolo IP
+
+        -> O recomendado é utilizar os loaders mais recentes pelos novos recursos.
+        -> Podemos setar os Load Balancers como setup privado ou setup publico.
+        -> Load Balancers possuem tambem security group, permitindo conexões http e https
+        com o Load Balancer.
+        -> Possui um esquema de configurações de security group aqui.
+            -> Precisamos criar um security group permitindo load balacer
+            receber reqs HTTP e HTTPs, pela porta 80 e 443, no protocolo TCP,
+            especificando sourcec 0.0.0.0/0
+            -> Então na nossa instancia o security group precisa apontar a permissao
+            da rota HTTP protocolo tcp porta 80 pelo source disponibilizado pelo load balancer
+            apos a configuração.
+            -> Desta forma permite conexão na instancia apenas pelo LOAD BALANCER.
+
+        -> O classic load balancer foi removido da AWS e nao cai nas provas.
+
+    Application Load Balancer (ALB) (v2)
+        -> Considerado um Layer 7 (HTTP).
+        -> Load balancing to multiple HTTP applications across machines (target groups)
+        -> Load balancing to multiple applications on the same machine (ex: containers)
+        -> Support for HTTP/2 and WebSocket
+        -> Support redirects (from HTTP to HTTPs for example)
+        -> Routing based on path in URL (example.com/users & example.com/posts)
+        -> Routing based on hostname in URL (one.example.com & other.example.com)
+        -> Routing based on Query String, Headers (example.com/users?id=123&order=false)
+        -> ALB (APLICATION LOAD BALANCERS) are great fit for micro-services & container-based
+        application (example: Docker & Amazon ECS)
+        -> Has a port mapping feature to redirect to a dynamic port in ECS.
+
+        Target Groups:
+            -> EC2 Instances ( can be manged by an Auto Scaling Group) - HTTP
+            -> ECS task (managed by ECS itself) - HTTP
+            -> Lambda functions - HTTP Request is translated into a JSON event
+            -> IP Addresses must be private IP
+            -> ALB can route to multiple target groups
+            -> Health checks are at the target target group level
+
+        Query String/Parameters Routing
+            -> Podemos especificar rotas atravez de parametros no alb
+
+        Good to know - Bom saber
+            -> Tem host fixo (xxxx.region.elb.amazonaws.com)
+            -> As aplicações nao veem o ip do cliente diretamente.
+                -> O ip verdadeiro do cliente é inserido no header X-Forwarded-For
+                -> Conseguimos obter a porta atravez do X-Forwarded-Port and proto X-Forwarded-Proto
+
+
+
