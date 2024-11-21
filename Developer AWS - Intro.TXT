@@ -925,5 +925,40 @@
                 -> O ip verdadeiro do cliente é inserido no header X-Forwarded-For
                 -> Conseguimos obter a porta atravez do X-Forwarded-Port and proto X-Forwarded-Proto
 
+        ALB - Hands on:
+            -> Iniciar uma instancia EC2
+            -> Agora vamos ter duas instancias apontado para o mesmo endereço URL,
+            geralmente com duas instancias acessamos as por 2 ips diferentes.
+            -> Porem com o Application Load Balancer conseguimos organizar as requisiçoes.
+                Ex: 192.168.0.2 redireciona para -> url fixo ou ip fixo
+            -> Existe um menu lateral esquerdo chamado Load Balancers.
 
+            -> CRIANDO UM LOAD BALANCER:
+                -> Name, Scheme: Internet-facing.
+                -> IPV4.
+                -> Network mapping, marcar todas as AZ. (para deploy em todas).
+                -> Carregar um security group para o load balancer
+                (podemos criar um novo permitindo somente http e https).
+                -> Listeners and routing: porta 80 configurada com um target group, que
+                sera uma de nossas instancias.
+                -> Entao a baixo possui um botão chamado create target-groups: onde
+                sera feito o grupo com nossas instancias para ser escutado na porta 80,
+                caso selecionamos o checkbox para criar um target group de INSTANCIAS,
+                pois podemos criar de outros tipos.
+                -> mantemos protocolo HTTP, healtcheck, entao NEXT.
+                -> Então selecionamos as instancias que queremos e "Include as peding".
+                -> Então na config do loadbalancer de listeners, carregamos nosso target group
+                na porta 80.
+                -> Então podemos criar o LOAD BALANCER, apos fazer isso nosso load balancer,
+                vem com um DNS, onde se acessamos recebemos um hello World.
+                -> Mas se ficarmos apertando f5 no mesmo dns podemos receber resposta de ambas,
+                instancias criadas, mudando as vezes o resultado no f5.
 
+            -> Application load balancer é focado nas requisiçoes HTTP e HTTPS.
+            -> Network Load Balancer trabalha com VPC, TCP, UDP, TLS, é um load balancer
+            de ultra perfomance podendo operar milhoes de requisiçoes simultaneas por segundo.
+            -> Gateway Load Balancer, usado para itentificar invasões, usado para firewalls,
+            analizando o trafego de internet.
+
+        ALB - Hands on - 2:
+            -> 
