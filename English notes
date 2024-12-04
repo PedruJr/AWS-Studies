@@ -1,0 +1,176 @@
+Explanation of Changes:
+"my first steps in the day was" → "my first steps of the day were"
+
+Corrected verb agreement ("steps" is plural, so "were" is used).
+Changed "in the day" to "of the day" for proper phrasing.
+Portuguese: "Passos" é plural, então usamos "were" em vez de "was". "Of the day" é a forma correta de expressar "do dia" neste contexto.
+"after it i go right to the computer" → "After that, I went straight to the computer"
+    -> WAS é foi e WERE é foram
+    -> Não se usa dentro do dia e sim do dia (Changed "in the day" to "of the day" for proper phrasing).
+
+Past tense consistency: You started with past tense ("waking up"), so "go" became "went."
+Improved flow with "After that" instead of "after it."
+Portuguese: Mantemos os tempos verbais consistentes. "Fui" é passado, então "went" é usado.
+"start at the early of the morning" → "start early in the morning"
+
+"Early of the morning" is not a correct phrase; "early in the morning" is standard.
+Portuguese: A frase correta em inglês para "cedo da manhã" é "early in the morning."
+"currently im learning something about ALB" → "Currently, I'm learning something about ALB"
+
+Added a comma after "Currently" for proper punctuation.
+"im" corrected to "I'm" (capitalized with the apostrophe for "I am").
+Portuguese: Sempre use apóstrofo em contrações, como "I'm."
+"its a connection manager, you can use to manage http request" → "It's a connection manager you can use to manage HTTP requests"
+
+Corrected "its" to "It's" (short for "It is").
+Pluralized "request" to "requests" because it's general usage.
+Capitalized "HTTP" (it's an acronym).
+Portuguese: "It's" significa "é" ou "está," enquanto "its" é "dele" (posse). E "HTTP" deve sempre ser em maiúsculo.
+"other tipe of conections" → "other types of connections"
+
+Corrected spelling: "type" and "connections."
+Made "type" plural ("types") for grammatical correctness.
+Portuguese: Corrigido o plural e a grafia.
+"certanly instances and machine" → "such as specific instances or machines"
+
+Changed "certanly" (incorrect spelling) to "such as."
+Made "machine" plural to match "instances."
+Portuguese: Em listas, "such as" é mais apropriado do que "certanly."
+"many type of ways like, paramenters, paths, urls" → "many types of ways, like using parameters, paths, or URLs"
+
+Corrected "type" to "types" for plural agreement.
+Fixed spelling: "paramenters" → "parameters."
+Capitalized "URLs" (acronym).
+Added "using" for smoother phrasing.
+Portuguese: Corrigida a grafia e o plural de "type."
+"its used by configuring a ALB to your instance security group connection config" → "It's set up by connecting an ALB to your instance's security group configuration"
+
+Corrected "its" to "It's."
+Changed "configuring a ALB" to "connecting an ALB" for clarity.
+Added possessive "instance's" and rephrased "connection config" to "security group configuration."
+Portuguese: Usamos "It's" para "é usado" e simplificamos o termo técnico.
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+Em inglês, a concordância verbal (ou "subject-verb agreement")
+refere-se à regra de que o sujeito e o verbo de uma frase devem concordar em número (singular/plural) e,
+ em alguns casos, em pessoa
+
+1. Concordância Singular e Plural:
+    -> Regra: Um sujeito singular exige um verbo singular; um sujeito plural exige um verbo plural.
+    -> Exemplo (Singular):
+        The cat runs fast.
+        (O sujeito "cat" está no singular, então o verbo recebe o "s").
+    -> Exemplo (Plural):
+        The cats run fast.
+        (O sujeito "cats" está no plural, então o verbo fica sem o "s").
+
+2. Concordância em Terceira Pessoa (Presente Simples)
+    -> No presente simples, verbos em inglês recebem um "s" ou "es" na terceira pessoa do singular (he, she, it).
+    -> Exemplo:
+        He works hard.
+        She studies a lot.
+        It goes without saying.
+    -> Atenção: Para sujeitos plurais (we, you, they), o verbo permanece na forma base: - They work hard.
+
+3. Sujeitos Compostos
+    -> Quando o sujeito é composto por "and" (e), o verbo é plural.
+    -> Exemplo:
+        John and Mary are friends.
+    -> Se os elementos compostos forem percebidos como uma única entidade, o verbo é singular.
+    -> Exemplo:
+        Bread and butter is my favorite breakfast.
+
+4. Sujeitos Separados por "Or" ou "Nor"
+    -> Quando o sujeito é composto por "or" ou "nor," o verbo concorda com o elemento mais próximo (regra de proximidade).
+    -> Exemplo:
+        Neither the teacher nor the students are here.
+        Either the students or the teacher is coming.
+
+5. Concordância com "There is" e "There are"
+    -> O verbo concorda com o sujeito que vem depois de "there."
+    -> Exemplo:
+        There is a book on the table.
+        There are books on the table.
+
+6. Substantivos Coletivos
+    -> Substantivos coletivos (team, family, group) podem ser singulares ou plurais dependendo do contexto.
+    -> Se a ideia for de unidade, use o singular:
+        The team is winning.
+    -> Se a ideia for de indivíduos agindo separadamente, use o plural:
+        The team are arguing among themselves.
+
+7. Concordância com Sujeitos Indefinidos
+    -> Alguns pronomes indefinidos são sempre singulares, mesmo que pareçam indicar plural:
+    -> Exemplo:
+        Everyone is happy.
+        Someone has taken my book.
+        Outros são sempre plurais:
+    -> Exemplo:
+        Few know the truth.
+        Both are responsible.
+
+8. Sujeitos com Frações ou Quantidades
+    -> O verbo concorda com o substantivo ou pronome que acompanha a fração ou quantidade:
+    -> Exemplo:
+        Half of the cake is gone.
+        Half of the students are present.
+
+9. Concordância com Verbos Modais
+    -> Verbos modais (can, will, should, etc.) não mudam a forma, independentemente do sujeito.
+    -> Exemplo:
+        He can swim.
+        They can swim.
+
+10. Sujeitos que Parecem Plurais, mas São Singulares
+    -> Algumas palavras terminadas em "s" são singular:
+    -> Exemplo:
+        Mathematics is difficult.
+        News is interesting.
+    -> Esses são os tipos mais comuns de concordância verbal em inglês. Se quiser, podemos fazer exercícios ou revisar algum caso específico. 😊
+
+-----------
+
+1. Presente Simples (Simple Present)
+Uso: Rotinas, fatos gerais, verdades universais, horários fixos.
+Exemplo:
+She goes to school every day.
+Water boils at 100°C.
+2. Presente Contínuo (Present Continuous)
+Estrutura: Sujeito + am/is/are + Verbo com -ing.
+Uso:
+Ações acontecendo agora, neste momento.
+Planos ou ações futuras já organizadas.
+Situações temporárias.
+Exemplo:
+I am studying English now. (Ação acontecendo agora)
+She is working on a project this week. (Situação temporária)
+We are traveling to Paris next month. (Plano futuro)
+3. Presente Perfeito (Present Perfect)
+Estrutura: Sujeito + have/has + Verbo no particípio passado.
+Uso:
+Ações que começaram no passado e continuam no presente.
+Experiências ou ações passadas que têm relevância no presente.
+Mudanças ao longo do tempo.
+Exemplo:
+I have lived here for five years. (Eu moro aqui há cinco anos.)
+She has finished her homework. (Ela terminou o dever de casa.)
+They have improved their skills a lot. (Eles melhoraram muito suas habilidades.)
+4. Presente Perfeito Contínuo (Present Perfect Continuous)
+Estrutura: Sujeito + have/has been + Verbo com -ing.
+Uso:
+Ações que começaram no passado e ainda estão acontecendo, com ênfase na duração ou processo.
+Ações recentes com efeito visível ou foco no processo.
+Exemplo:
+I have been studying English for two hours. (Eu estou estudando inglês há duas horas.)
+She has been working hard lately. (Ela tem trabalhado muito ultimamente.)
+Diferença entre os tempos no presente:
+Tempo	Quando Usar?
+Presente Simples	Fatos, rotinas, verdades universais.
+Presente Contínuo	Ações acontecendo agora, situações temporárias, planos futuros organizados.
+Presente Perfeito	Resultados de ações passadas que afetam o presente ou ações contínuas.
+Presente Perfeito Contínuo	Ênfase na duração ou processo de algo que começou no passado e continua.
+

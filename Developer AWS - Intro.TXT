@@ -961,4 +961,178 @@
             analizando o trafego de internet.
 
         ALB - Hands on - 2:
-            -> 
+            -> Para permitir somete conexões atravez do load balancer na sua aplicação ->
+            Na instancia voce deve deletar as regras de http no SECURITY GROUP da instancia,
+            então editar em INBOUND RULES, salvar o security group do ALB LOAD BALANCER.
+            -> Agora nas configs de load balancer, na parte de baixo possuimos uma lista de portas
+            chamadas listner.
+            -> Possui um botão chamado add RULE -> Nesta parte podemos adicionar CONDITIONS a RULE DO LISTNER
+            Nesta parte conseguimos adicionar os parametros que queremos validar para a regra, como pathname,
+            parametros, rota, etc. Podemos adicionar ate multiplas condiçoes.
+            -> Caso encaixe na regra podemos decidir o que acontece depois, se mandamos a um security group especifico
+            URL que vamos enviar, que tipo de req sera HTTP, HTTPS, podemos mandar uma response direto como so um texto
+            tbm.
+            -> Podemos decidir prioridade das regras.
+
+        Network Load Balancer - NLB:
+            -> Layer 4 -> Permite encaminhar TCP & UDP, para suas instancias.
+            -> Layer 4 considerado lower level.
+            -> Na prova se você ver algo sobre UDP, pense em network balancer e TCP.
+            -> Super desempenho, pode lidar com milhares de conexoes simultaneas.
+            -> Ultra-low Latency, resposta rapida.
+            -> Quando a prova falar sobre sua aplicação so puder ser acessada por 1, 2 a 3 ips, pense sobre network
+            load balancer.
+            -> Extreme performance, static ips, tcp, udp defines Network Load Balancer.
+            -> Não incluso no AWS FREE TIER.
+            -> Funciona exatamente como o load balancer, porem voce pode especificar ips para acessos exclusivos,
+            ou bloquealos n to ligado.
+            -> Health Check do network funciona para HTTP, HTTPs, TCP.
+            -> Podemos ter um NLB a frente de um ALB e desfrutar das duas funçoes.
+
+        NLB - Hands on:
+            -> Nas opções LOAD BALANCER em CREATE -> Podemos selecionar o network load balancer
+            -> Configuramos com INTERNET FACING IPV4, Com a VPC que temos e todas as AZ disponiveis.
+            -> Cada AZ recebe um IPV4 fixo pela AMAZON. Podendo ser substituido pelo Elastic IP.
+            -> Criamos um security group porta 80 liberada para HTTP e removemos o security padrao na criação.
+            -> Nas configs entao em listening coseguimos marcar no select TCP, UDP, TCP_UDP, TLS.
+            -> E colocamos TCP liberado na porta 80 do listener, e colocamos um novo SECURITY GROUP,
+            desta vez sera um ESPECIFICO PARA NLB.
+            -> Setamos protocolo TCP na porta 80, health check para http, pelas instancias serem http.
+            -> EM ADVANCED HEALTH SETTINGS -> Healty threshold 2s -> Timeout 2s -> Interval 5sec
+            -> Então no final selecionamos as instancias que o NLB vai mirar.
+            -> Nas instancias selecionadas precisamos permitir no inbound rulez as conexões do novo NLB, do contrario
+            as duas instancias selecionadas no target group nao vao receber as conexoes do NLB.
+
+
+        Gateway Load Balancer - GWLB
+            -> Deploy, scale and manage a fleet of 3rd party network virtual appliances in AWS
+            -> Passar o trafico de dados todos por um FIREWALL, ou sistema de prevençao e detecção
+            (IDPS ou deep packet inspection system) ou modificar payloads, tudo ao nivel de internet.
+            -> Inspecionar o fluxo antes de chegar na sua aplicação.
+            -> O Target group deste sao aplicações de segurança virtual de terceiros, entao devolve a resposta tratada
+            para o GWLB novamente e ele encaminha para o proximo fluxo seja NLW ou ALB ate chegar na aplicação
+            que tem seu target group.
+            -> Opera em um layer menor ainda o layer 3, para pacotes de ip, network layer for ip packets.
+            -> 2 funçoes basicamente:
+                -> Transparent Network Gateway: Entrada e saida unica.
+                -> Load Balancer: distribui o trafico entre as aplicações virtuais.
+            -> Usa o protocolo GENEVE na porta 6081, caso voce escute isso na prova,
+            com certeza é GWLB
+            -> Podemos tambem apontar para instancias AWS, IPS ESPECIFICOS
+
+    67. Elastic Load Balancer - Sticky Sessions (Session Affinity)
+        ->  Session afinity quer dizer que um cliente sera redirecionado para a mesma instancia,
+        entao quando outro cliente entrar sera direcionado para outra instancia e mantera a distribuiçao
+        com esta instancia.
+        -> Podemos configurar isso em NLB E ALB.
+        -> Feito atravez de um atributo com data de expiração no cookie, quando expira ele pode trocar de
+        instancia e manter este controle com outra ate expirar novamente a data.
+        -> Ele precisa manter a conexão com a mesma aplicação de backend na instancia aws, para nao perder a
+        sessão.
+        -> Pode resultar em imbalace.
+        -> Dois tipos de cookie:
+            -> Custom cookie:
+                -> Cookie customizado gerado pelo target vulgo aplicação.
+                -> Pode ter atributos custom pela aplicação.
+                -> Nome do cookie deve ser especifico para cada target group.
+                -> Não colocar os nomes AWSALB, AWSALBAPP or AWSALBTG, sao reservados para o uso do
+                ELB.
+            -> Application cookie:
+                -> Gerado pelo Load Balancer
+                -> Cookie name (AWSALBAPP)
+            -> Duration-based Cookie
+                -> Gerado pelo Load Balancer
+                -> Cookie name (AWSALB for ALB and AWSELB for CLB)
+                -> expiraçao por tempo
+
+    Ativando Sticky Sessions:
+        -> Nas configs de target group:
+            -> Actions -> Edit atribute -> Scroll down -> target select configs
+            -> Activate Checkbox Turn on Stickness:
+                2 tipos: Load Balancer Generated Cookie -> Sem nome no cookie
+                         Application-based Cookie -> Você nomeia o cookie.
+            -> Setamos Stickness duration e Unit of Time em selects.
+            -> Ai dependedo do dia selecionado ele vai sempre te encaminhar para uma instancia
+            que voce ja fez requisição mantendo assim um melhor fluxo.
+
+    Cross-Zone Load Balancing
+        -> Normalmente com 2 ALBS de AZ diferentes o trafego é dividido em 50/50
+        -> Pelo que entendi, teremos um ALB que abraça outros 2 ALBS, de AZ diferentes,
+        um com 2 instancias e a outra AZ com 8, este Cross-zone faz com que a distribuição
+        de requisiçoes seja feita igualmente entre todas as intancias, entao cada uma cuidara
+        de 10% das requisiçoes mesmo sendo crosszone, equilibrando mais as requisiçoes por AZ,
+        devido a uma delas ter mais instancias.
+        -> Sem crosszone, a requisição é enviado ao node, enviando a carga de maneira 50/50
+        independente de ter mais instancias ou nao, ou seja uma AZ com duas instancais,
+        cada um ficara com 25% da responsa, ja a outra AZ com 8 cada instancia ficara com 6,25%
+
+        Application Load Balancer - Cross-Zone Load Balancing
+            -> Habilitado automaticamente pelo ALB. (Pode ser desabilitado por Target Group)
+            -> Sem cobranças por inter AZ data, pelo lowdown desta aplicação entrar em ação.
+
+        Network e Gateway Load Balancer - Cross-Zone Load Balancing
+            -> Desativado por padrão
+            -> E você paga por dados inter AZ se for ativado
+
+        Classic Load Balancer - Cross-Zone Load Balancing
+            -> Desativado por padrão
+            -> E você NÂO paga por dados inter AZ se for ativado
+
+        Hands On
+            -> em EC2 -> Load Balancers -> Seu load Balancer -> Configuraçoes de Attributes ->
+            Então podemos ver que a config de Cross-Zone load balancing é um checkbox
+            -> e dependendo do tipo de Load Balancer esta marcado ou não.[
+            -> Podemos especificar o uso do Cross-zone tambem pelo Target Group, caso nao possamos
+            editar o cross-zone balancer neste caso.
+
+    SSL/TLS - Basics
+        -> SSL certificado que permite:
+            -> Permite o trafego entre os clientes e o Load balancer ter essa encriptação,
+            chamada de in-flight encryption, feito seu encriptamento durante o transito entre as
+            aplicações.
+        -> SSL = Secure Sockets layers, usado para criptografar conexões..
+        -> TLS = Transport Layers Security, uma versão mais nova do SSL
+        -> Atualmente TLS é o mais usado, porem as pessoas se referem a ele como SSL,
+        inclusive o professor.
+        -> Certificaçoes Publicas de SSL são emitidos por Certificate Authorities (CA)
+        -> Como Comodo, Symantec, GoDaddy, GlobalSign, Digicert, Letsencrypt, etc.
+        -> Conexão é feita atravez do LOAD BALANCER LB atravez de https que é encryped, e passa
+        por uma vpc internamente usando http, pq a rede é segura.
+        -> LOAD BALANCER USA CERTIFICADO X.509 certificado de server SSL/TLS
+        -> Podemos fazer o controle destes certificados atravez do ACM
+        (AWS CERTIFICATE MANAGER).
+        -> Podemos inclusive criar e carregar nossos proprios certificados.
+        -> No listener no HTTP, especificamos um certificado.
+        -> Tambem é possivel adicionar multiplos certificados caso queira atender
+        multiplos dominios
+        -> Possivel utilizar um SNI (SERVER NAME INDICATOR) para especificar o nome do host.
+
+        SNI - Server Name Indication
+            -> Responsavel por multiplos certificados ssl em um server para atender multiplas
+            conexões/sites
+            -> Protocolo novo que necessita que no handshake das aplicaçoes a conexao indique
+            o nome do host desejado como alvo para conexão.
+            -> Funciona somente com versões novas do ALB & NLB ou CloudFront
+            -> Então classic load balancer nao funciona.
+            -> Quando vemos multiplos certificados ssl no load balancer, é ALB ou NLB.
+            -> CLB (v1) -> SUPORTA APENAS 1 CERTIFICADO SSL, quer dizer que precisa de multiplos
+            CLB caso queira atender com multiplos certificados.
+            -> ALB (v2) -> Suporta multiplos caminhos com multiplos certificados ssl
+            Utilizando SNI SERVE NAME INDICATION para fazer funcionar.
+            -> NLB (v2) = ALB.
+
+    SSL - HANDS ON
+        -> EC2 -> LOAD BALANCER -> ALB -> ADD LISTENER
+        -> Então setamos os detalhes -> HTTPS -> Porta padrao 443
+        -> Então ao escutar por esta porta, escolhemos adicionar uma açao padrão,
+        que seria forward encaminhamento para um TARGET GROUP ESPECIFICO DE EC2
+        -> Entao temos as configuraçoes de SECURE LISTENER SETTIGS, podemos escolher
+        a politica de seguraça, para aplicar o certificado
+        (caso precise de compatibilidade com SSL/TLS Antigos)
+        -> Então apontamos para onde o certificado esta, geralmente esta em acm, nao
+        recomendamos o acm ou import para importar em ACM o certificado.
+
+
+    ELB - Connection Draining
+
+
