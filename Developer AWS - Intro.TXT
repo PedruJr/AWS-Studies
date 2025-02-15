@@ -1134,5 +1134,87 @@
 
 
     ELB - Connection Draining
+        -> Atualmente pode ter duas nomeclaturas.
+        -> Connection Draing - em CLB:
+            -> Tempo para completar o in-flight requests, enquanto a instancia esta
+            com problemas ou no processo de "de-registering"
+            -> Entao é parado o processo dee enviar requisiçoes a instancia, enquanto
+            ela esta neste estado.
+            -> Por padrao o tempo esperado é 5 minutos 300 esconds, mas pode subir de 1 a 3600
+            seconds.
+
+    Auto Scaling Group
+        -> Trabalha com as cargas aplicadas nas instancias, como é facil criar e excluir instancias
+        ec2, caso tenha muitas conexoes ou cargas sao criados novas instancias.
+        -> E caso tenha pouca carga algumas instancias sao desabilitadas.
+        -> Garantir o minimo e o maximo de instancias ec2.
+        -> Automaticamente registra os novos ec2 no load balancer.
+        -> Caso alguma instancia ec2 tenha finalizado indesejadamente, Auto Scaling Group Recria a
+        instancia. (Atravez do ELB Health Check)
+        -> ASG é free, so pagamos pelas instancias.
+        -> CONFIGS POSSIVEIS AO INICIALIZAR:
+            -> Atravez do Launcher Template (Launch Configurations)
+            -> AMI + Instance Type
+            -> EC2 User Data
+            -> EBS Volumes
+            -> Security Groups
+            -> SSH KEY PAIR
+            -> IAM Roles for EC2 Instances
+            -> Network + Subnet Infos
+            -> Load Balancer Info
+            -> Min Size, Max Size, Initial Size
+            -> Politicas de Escalonamento.
+        -> Podemos configurar o ESCALONAMENTO com o CloudWatch.
+            -> Baseados no alarme criamos politicas de scale-out (incrementar) e
+            scale-in policies (decrease the number of instances).
+            -> Politicas de metricas como consumo de cpu, horario, mem, etc.
+
+    Hands-on Auto Scaling Group -> LAUNCH TEMPLATE CONFIGURATION :
+        -> Aba Auto Scaling Group:
+        -> Create Auto Scaling Group Button -> Setar Nome -> Escolher ou criar um Launch Template
+        Template Name -> Template Version -> Amazon Machine Image AMI como Amazon Linux 2 2023 ->
+        Instance Type as T2 Micro (Free Tier) -> Configuramos o Keypair que temos, key para SSH lembrem ->
+        Network Settings -> No subnet -> Firewall (escolhemos o security group FW) -> 8GB de Storage ->
+        -> No final da criaçao temos o input text user data info que informamos os comandos cmd de incio
+        de instancia.
+        -> CREATED LAUNCH TEMPLATE CONFIGURATION
+        -> EM LAUNCH TEMPLATE OR CONFIGURATION -> Selecionamos nosso template -> Escolhemos o nome do auto
+        scaling group e então seu template -> PARTIMOS ENTAO PARA O INSTANCE LAUNCH OPTIONS ->
+        -> Escolhemos nosso VPC e suas SUBNETS
+        -> Tambem temos Instancias especificas para esta configuraçao de Launch template,
+        porem há uma opção de sobrescrever estas especificaçoes com OVERRIDE LAUNCH TAMPLATE.
+        -> Podendo configurar opções e especificaçoes para o on demand e o on point.
+        -> APOS ISSO CONFIGURAMOS O LOAD BALANCER -> Como ja temos um configurado vamos utilizar a opção add
+        existing load balancer, podemos criar um novo ou adicionar a um ja existente.
+        -> Entao podemos confirar os helth checks, tanto de instancias ec2 quanto de ELB elastic load balancers
+        -> CLICK ON NEXT GROUP SIZE -> podemos variar de 1 a muitos sao a rage de instancias
+        -> Scaling policies como none é um topico bem avançado.
+        -> NEXT CAIMOS EM NOTIFICATIONS -> Skipamos por hora.
+        -> Então create auto scaling group -> Caimos na pagina de detalhes do LAUNCH TEMPLATE CONFIGURATION.
+        -> Nesta tela de detalhes do AUTO SCALING GROUPS TEMOS A ABA ACTIVITY que mostra as Notificaçoes de atividades
+        do ASG -> Como instancias criadas e finalizadas para atender notificaçoes/historico -> demora um pouco.
+        -> Temos a aba INSTANCE MANAGEMENT NO ASG que podemos ver as  instancais criadas e seus health check.
+        -> Caso de problemas verifique o security group issue ou user data script com erro.
+        -> Ao alterar a capacidade nas configurações logo o ASG lançara mais uma instancia sendo possivel visualizar no
+        Activities.
+
+    SCALING POLICIES - Auto Scaling Groups
+        -> Dynamic Scaling (Escalonamento Dinamico)
+            -> Target Tracking Scaling, escalonamento de acordo com seu objetivo.
+            -> Simples de configurar/setar.
+            -> EX: Se voce quiser que o Auto Scaling Group - ASG CPU para ficar ao redor de
+            40% de uso. -> Assim o ASG vai manter o escalonamento a baixo ou a cima para manter
+            sua metrica selecionada.
+
+        -> Simples / Step Scaling
+            -> Define a capacidade atravez de um alarme CLOUNDWATCH.
+            -> EX: Passou das 08:00 da manha vai a CPU > 50%
+            -> EX: Passou das 20:00 da noite vai a CPU < 30%
+        
+        -> Simples / Step Scaling
+            -> Define a capacidade atravez de um alarme CLOUNDWATCH.
+
+        -> Schedule Scaling
+            -> Define a capacidade atravez de um alarme CLOUNDWATCH.
 
 
