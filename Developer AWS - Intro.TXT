@@ -1215,6 +1215,179 @@
             -> Define a capacidade atravez de um alarme CLOUNDWATCH.
 
         -> Schedule Scaling
-            -> Define a capacidade atravez de um alarme CLOUNDWATCH.
+            -> Antecipa o escalonamento baseado em padroes conhecidos de uso.
+            -> Exemplo aumenta a capacidade as 17 horas de sabado.
+
+        -> Predictive Scaling
+            -> Analisa as cargas antigas e faz uma previsao de carga com schedule
+            scaling.
+
+        -> Boas Metricas para Escalonar
+            -> CPUUtilization: Average CPU Utilization across instances.
+            -> RequestCountPerTarget: Number of request por instance.
+                -> Usually there are a thousand requests per instance.
+            -> Average Network In / Out: depends on the input volume
+            and connection output with the internet.
+                -> It's prevents bottleneck in EC2 connection instances.
+
+        -> ASG - Scaling Cooldowns
+            -> After the scaling activity happens, you are in the cooldown period,
+            the default is 300 seconds -> belive it's to activate again.
+                -> Will not allow launch or terminate any instance to stabilize the
+                systems.
+            -> recommend to use ready-to-use AMI to reduce configuration time,
+            to call faster requests and reduce cooldown period.
+
+    SCALING POLICIES - Auto Scaling Groups - HANDS ON
+        -> na aba EC2 -> Auto Scaling groups -> NOMEDOSEUASG -> Automatic Scaling
+        -> Temos 3 categorias nesta aba:
+            -> Dynamic scaling policies:
+                -> Opçoes ao criar um Dynamic Policy:
+                    -> Policy Type:
+                        -> Target tracking:
+                            -> Este cria automatico o CloundAlarm.
+                            -> Criamos o nome.
+                            -> Setamos a matrica de avaliação - EX: Average CPU Utilization.
+                            -> Target value to maintain average cpu utilization at 40 or value set.
+                        -> Step Scaling:
+                            -> Basically its like simple scaling but with multiple steps
+                            and multiple actions, like add 1 at certain hour and more after x hour.
+                        -> Simple Scaling: Choose name, CloudWatch Alarm and take actions
+                           -> Like ADD OR REMOVE/SET DEFINITIVE VALUE capacity units, like 2 or 10% of your group
+                           choosing at leats 2 increments of capacity unity.
+            -> Predictive scaling policies:
+                -> Este aqui é comandado por Machine Learning.
+                -> Marcamos a opçao checkbox (Scale based on Forecast)
+                -> Então podemos selecionar as opçoes de otimização:
+                    -> CPU Utilization.
+                    -> Network in bytes.
+                    -> Network out in bytes.
+                    -> Application Load Balancer Request Count.
+                    -> Custom Metric Pair.
+                -> Entao nestas opçoes conseguimos selecionar a % de boost em cada instancia.
+                -> Esta opçao precisa estar habilitada por um longo tempo na semana
+            -> Scheduled Actions:
+                -> Pode prever momentos de trafego mais intensos do sistema e entao
+                apontar a capacidade desejada (ou min cap ou max cap tambem).
+                -> Podemos escolher a recorrencia, uma vez, toda segunda, a semana toda...
+                -> Podemos escolher a TimeZone, horario UTC/ETC.
+                -> Podemos especificar tambem a hora e data exata.
+                -> Como exemplo vou soltar uma grande promoçao no sabado que vem, entao
+                posso ja deixar pre configurado meu ASG aqui.
+
+            -> ATENÇÃO -> Na aba EC2 -> Auto  Scaling Groups -> DemoASG
+                -> Na aba details -> Em GROUP DETAILS -> Precisamos EDITAR e então adicionar
+                a possibilidade de incrementar mais UNITS e de tambem a quantidade de units minima
+                e padrão para que se possa incrementar novas unidades no grupo.
+
+            -> Na aba Monitoring conseguimos analizar os status das nossas instancias
+            -> Temos a opçao Auto Scaling e EC2 para analize.
+            -> Podemos fazer um Stresse na instancia para testar o Auto Scaling.
+            -> NA ABA INSTANCE MANAGEMENT PARA FAZER UM ESTRESSE TEST
+                -> Clicamos na instancia na lista -> Opçao Connect -> on google -> Install stress
+                amazon linux 2 -> copy linux comands -> then run the stress -> stress -c 4 ->
+                make de stress cpu goes to 100%
+            -> Então na aba ACTIVITYS/MONITORING we can see the action -> Na sessão Activity History
+            -> Mostra um anuncio, O alarme foi ativado e por causa das politicas as instancias foram,
+            ativadas para duas 2
+            -> PODEMOS ANALISAR POR PESQUISAR CLOUNDWATCH SERVICE -> ABA ALARMES NO MENU DA ESQUERDA
+                -> VEMOS ENTAO 2 ALARMES NA LISTA ALARME LOW E ALARME HIGH, RESPECTIVAMENTE
+                UM ALARME PARA SETAR MENOS CARGA E OUTRO PARA MAIS CARGA CRIADOS AUTOMATICOS PELO PROCESSO
+                SCALING POLICIES DYNAMIC POLICY
+
+    -> AUTO SCALING GROUPS - ASG - INSTANCE REFRESH
+        -> Considerado a very handy tool in ASG
+        -> Objetivo lançar um update no template de launch, recriando todas as instancias EC2
+        devido a um novo template launch, alterado todas as instancias como desejado.
+        -> Native feature do AWS INSTANCE REFRESH.
+        -> Chamamos a api chamada Instance Refresh, setamos como parametro o minimun health,
+        que decide o minimo de instancias enquanto o processo ocorre.
+        EX: 40% entao deixara uma parte das instancias on durante o processo para manter o minimo
+        necessario.
+
+    Isso é chamado de escalabilidade vertical porque envolve o aumento da capacidade de um único
+    servidor ao substituir a instância EC2 por uma versão mais potente, com mais CPU, RAM e outros recursos.
+    Explicação:
+    Escalabilidade vertical (Scale-Up) → Aumenta o poder de processamento da mesma máquina, trocando para um
+    modelo maior (como de r4.large para r4.4xlarge).
+    Escalabilidade horizontal (Scale-Out) → Adiciona mais instâncias menores para distribuir a carga entre
+    vários servidores.
+    A escalabilidade vertical tem um limite físico
+    Como identificar?
+    A escalabilidade vertical ocorre quando:
+    A família da instância permanece a mesma (exemplo: r4 → r4).
+    Apenas o tamanho aumenta (large → 4xlarge).
+    Exemplo:
+    Antes: r4.large
+    Depois: r4.4xlarge
+    Aqui, a família r4 não mudou, apenas o tamanho da instância aumentou, indicando escalabilidade vertical.
+    Se a mudança fosse de r4.large para m5.large, por exemplo, seria uma troca de família e poderia indicar
+    outra estratégia (como otimização de custo ou mudança de workload).
+
+    Lembrar dos cookies reservados do ALB:
+    -> The following cookie names are reserved by the ELB (AWSALB, AWSALBAPP, AWSALBTG).
+
+    You have an Application Load Balancer that is configured to redirect traffic to 3 Target Groups based
+    on the following hostnames: users.example.com, api.external.example.com, and checkout.example.com.
+    -> You would like to configure HTTPS for each of these hostnames. How do you configure the ALB to make this work?
+    Server Name Indication (SNI) allows you to expose multiple HTTPS applications each with its own SSL certificate
+    on the same listener.
+
+    Your boss asked you to scale your Auto Scaling Group based on the number of requests per minute your
+    application makes to your database. What should you do?
+    -> There's no CloudWatch Metric for "requests per minute" for backend-to-database connections. You need to
+    create a CloudWatch Custom Metric, then create a CloudWatch Alarm.
+
+    Which feature in both Application Load Balancers and Network Load Balancers allows you to load
+    multiple SSL certificates on one listener?
+    -> Server Name Indication (SNI)
+
+    You have an Application Load Balancer that is configured to redirect traffic to 3 Target Groups based
+    on the following hostnames: users.example.com, api.external.example.com, and checkout.example.com.
+    You would like to configure HTTPS for each of these hostnames. How do you configure the ALB to make this work?
+    -> Server Name Indication (SNI) allows you to expose multiple HTTPS applications each with its own
+    SSL certificate on the same listener.
 
 
+
+
+    -> AMAZON RDS (RELATIONAL DATABASE SERVICE) - OVERVIEW
+        -> Management of DB service that uses SQL query language
+        -> Create and manage AWS Databases.
+        -> Managed DB supported by RDS:
+            -> Postgres
+            -> MySQL
+            -> MariaDB
+            -> Oracle
+            -> Microsoft SQL Server
+            -> IBM DB2
+            -> Aurora (AWS PROPRIETARY DATABASE)
+
+        -> Advantage RDS x deploying DB on EC2
+            -> RDS Managed Services:
+                -> Automated Provisioning, OS patching.
+                -> Continuous backups and restore to especific timestamp (POINT IN TIME RESTORE)!
+                -> Monitoring dashboards.
+                -> Read replicas for improved read performance.
+                -> Multi AZ setup for DR (Disaster Recovery).
+                -> Maintenance windows for upgrades.
+                -> Scaling capability (vertical and horizontal).
+                    -> Vertical increasing the instance-type type
+                    -> Horizontal by adding read replicas
+                    -> Storage backed bt EBS
+                -> CONS:
+                    -> Can't login SSH into your instances, because it's a managed instance,
+                    we don't have accesss to underlying EC2 Instance.
+
+        -> RDS - Storage Auto Scaling
+            -> Helps you increase storage on your RDS DB instance dynamically.
+            -> When RDS detects you are running out of free database storage, it scales automatically.
+            -> That's avoid manually scaling your database storage.
+                -> Remember to set Maximum Storage Threshold (Maximum limit for DB Storage).
+            -> Automatically modify storage if (Good for unpredicatable workload):
+                -> Free storage is less than 10% of allocated storage.
+                -> Low-storage lasts at least 5 minutes.
+                -> 6 hours gave passed since last modification
+
+        -> RDS Read Replicas for read scalability
+            ->  
