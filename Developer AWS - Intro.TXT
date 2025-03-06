@@ -1390,4 +1390,65 @@
                 -> 6 hours gave passed since last modification
 
         -> RDS Read Replicas for read scalability
-            ->  
+            ->  Extremamente importante para distinguir multi AZ and Understand exactly the use cases
+            for those.
+            -> Scale your reads, escalar seus readers, no caso melhorar a resposta das requisiçoes consultas.
+            -> RDS database instances possuem readers e writes.
+            -> até 15 read replicas
+            -> Suporta AZ, Cross AZ e Cross Region
+            -> Então temos a instancia do RDS DB INSTANCE -> e podemos ter many async RDS DB READ REPLICA
+            -> Eventually consistenc asynchronous replication
+            -> Replicação Assíncrona: Quando você realiza uma alteração no banco de dados primário,
+               essa alteração é enviada para as réplicas sem que o processo de escrita precise esperar
+               que elas confirmem a atualização. Isso melhora a performance e a escalabilidade, pois
+               o primário não é “bloqueado” enquanto as réplicas são atualizadas.
+            -> Consistência Eventual: Por ser assíncrona, as réplicas podem demorar um pouco para
+               refletir as últimas mudanças. Isso significa que, logo após uma escrita, uma consulta
+               em uma réplica pode não mostrar os dados mais recentes. Contudo, se não houver novas
+               alterações, com o tempo todas as réplicas se atualizarão e os dados se tornarão consistentes
+               com o primário.
+            -> No AWS RDS, essa abordagem é muito comum em read replicas, que são usadas para distribuir
+               a carga de leitura e melhorar a escalabilidade do sistema, aceitando um pequeno atraso na
+               propagação dos dados como trade-off para melhor performance e disponibilidade.
+            -> Incriveis para escalonar o reading/get/leitura das requisiçoes.
+            -> Podem ser promovidos de replica para DB original, aplicando direitos na replica a tornando
+            um DB perdendo seu mecanismo de replicação apos isso, vivendo com seu proprio ciclo de vida.
+            -> O DB Principipal precisa atualizar a STRING de conexão to LEVERAGE the list of all
+             READ REPLICAS que voce tiver no seu CLUSTER RDS.
+
+            -> Exemplificando:
+                -> Tendo uma base de dados com carga normal da sua aplicação.
+                -> Então voce decide fazer um relatorio da aplicação e rodar algumas analises.
+                -> Caso voce conecte a aplicação de relatorios e analises no seu DB, ao realizar as funçoes
+                sobrecarregaria sua base de dados.
+                -> Então voce cria um Read Replica que atualiza asyncronamente (no caso consistencia eventual)
+                 mas responde a leitura de maneira agil.
+                 -> PRD APLICATION NOT AFFECTED THIS CASE AND THIS IS PERFECT
+                 -> UTILIZADO APENAS PARA GET, INSERT, UPDATE, DELETE
+
+                 -> GERALMENTE AWS COBRA POR TRAFEGO DE DADOS ENTRE REGIOES
+                 -> POREM: Como RDS é um serviço gerenciado, entre zonas voce nao paga por esta transferencia.
+                 -> EX: transferencia entre DB ORIGINAL em US-EAST-1A e REPLICA em US-EAST-1B
+                 -> POREM: Entre CROSS REGIONS inclui um taxa de replicação para a cross zone.
+
+            -> RDS MULTI AZ (Disaster Recovery)
+                -> Usando como principal fonte de DISASTER RECOVERY.
+                -> Aumenta a avaliability, disponibilidade devido a qualquerl possivel falha
+                que desabilite o DB principa, queda de energia, problema na aplicação, automaticamente
+                ativa a RDS DB INSTANCE que esta em STANDBY.
+                -> Podemos transformar nossas instancias READ em RDS Multi AZ.
+                -> Este possui replicação SYNCRONA
+                -> Em um ambiente RDS Multi-AZ, "one DNS name automatic app failover to standby" significa que há um
+                 único nome DNS associado à instância primária, que é automaticamente atualizado para apontar para a
+                 instância standby em caso de falha. Isso garante que a aplicação não precise alterar sua configuração
+                 de conexão, pois o nome DNS permanece o mesmo, permitindo uma transição transparente e automática
+                 para o standby.
+                 -> A LOT OF QUESTIONS A BOUT IT
+
+            -> RDS - FROM SINGLE-AZ to MULTI-AZ
+                -> Zero downtime operation (no need to stop the DB).
+                -> Just click on MODIFY on database and enable multi AZ.
+                -> Siginifica que sua instancia RDS DB, vai ter um DB Mestre com conexao syncrona.
+                -> POR BAIXO DOS PANOS:
+                    -> Tirado um SNAPSHOT do DB principal, então realocado o SNAPSHOT para um DB ja em
+                    standby, entao a conexão sincrona é realizada entre os dois DBS
